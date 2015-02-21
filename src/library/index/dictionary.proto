@@ -1,0 +1,13 @@
+package yindex;
+
+
+message Word {
+    optional string word = 1;
+};
+
+
+message DictionaryEntry {
+    optional Word word             = 1;
+    optional uint64 word_id        = 2;
+    optional uint64 word_frequency = 3;
+};

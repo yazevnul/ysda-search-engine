@@ -1,0 +1,17 @@
+package yindex;
+
+
+message WordInIndex {
+    optional uint64 word_id = 1;
+};
+
+
+message AssociatedDocument {
+    optional uint64 document_id    = 1;
+    optional uint64 word_frequency = 2;
+};
+
+
+message AssociatedDocuments {
+    repeated AssociatedDocument documents = 1;
+};
