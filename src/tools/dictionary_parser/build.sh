@@ -8,6 +8,7 @@ if [ 'debug' = $1 ]; then
         -Wall                                            \
         -Wextra                                          \
         -pedantic                                        \
+        -fcolor-diagnostics                              \
         -lprotobuf                                       \
         -I../../                                         \
         main.cpp                                         \
@@ -20,10 +21,13 @@ elif [ 'release' = $1 ]; then
     clang++                                              \
         -std=c++11                                       \
         -stdlib=libc++                                   \
-        -O2                                              \
+        -mllvm                                           \
+        -inline-threshold=10000                          \
+        -O3                                              \
         -Wall                                            \
         -Wextra                                          \
         -pedantic                                        \
+        -fcolor-diagnostics                              \
         -lprotobuf                                       \
         -I../../                                         \
         main.cpp                                         \
