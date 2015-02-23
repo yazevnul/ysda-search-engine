@@ -1,5 +1,9 @@
 # ysda-search-engine
-Search engine we build during practice lessons on "Information Retreival" in Yandex School of Data Analysis
+Search engine we build during practice lessons on "Information Retrieval" in Yandex School of Data Analysis
+
+## Requirements
+* Clang 3.4+ or any other compiler that support C++14 standard
+* Google Protocol Buffers 2.6+
 
 ## Usage
 
@@ -14,7 +18,7 @@ cd src/tools/dictionary_parser
 ./dictionary_parser dictionary.txt dictionary.txt.bin
 
 cd src/tools/index_parser
-./index_parser index_parser index.txt index.txt.bin index.txt.statistics.bin
+./index_parser index.txt index.txt.bin index.txt.statistics.bin
 ```
 
 Ranker interactive session
