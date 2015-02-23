@@ -4,7 +4,7 @@ FLAGS = [
     '-Wall',
     '-Wextra',
     '-Werror',
-    '-std=c++11',
+    '-std=c++14',
     '-stdlib=libc++',
 
     '-I', os.path.dirname(os.path.abspath(__file__))
