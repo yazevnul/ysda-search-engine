@@ -66,7 +66,7 @@ yindex::Dictionary yindex::io::LoadDictionary(const std::string& file_name) {
 }
 
 
-void yindex::io::Save(const yindex::Index& index, const std::string& file_name) {
+void yindex::io::Save(const yindex::InvertedIndex& index, const std::string& file_name) {
     int fd = open(file_name.c_str(), O_WRONLY | O_CREAT, 0666);
     if (-1 == fd) {
         throw std::runtime_error("open failed");
@@ -94,14 +94,14 @@ void yindex::io::Save(const yindex::Index& index, const std::string& file_name) 
 }
 
 
-yindex::Index yindex::io::LoadIndex(const std::string& file_name) {
+yindex::InvertedIndex yindex::io::LoadIndex(const std::string& file_name) {
     int fd = open(file_name.c_str(), O_RDONLY);
     if (-1 == fd)
         throw std::runtime_error("open failed");
 
     google::protobuf::io::FileInputStream input(fd);
 
-    yindex::Index index;
+    yindex::InvertedIndex index;
     for (yindex::WordInIndex dummy_word; ReadDelimitedFrom(&input, &dummy_word);) {
         assert(index.find(dummy_word.word_id()) == index.end());
 

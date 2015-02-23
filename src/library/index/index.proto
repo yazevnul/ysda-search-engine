@@ -9,9 +9,18 @@ message WordInIndex {
 message AssociatedDocument {
     optional uint64 document_id    = 1;
     optional uint64 word_frequency = 2;
+
+    // document length divided by the average document length calculated over all documents
+    optional double dl_by_avg_dl   = 3;
 };
 
 
 message AssociatedDocuments {
     repeated AssociatedDocument documents = 1;
+};
+
+
+message IndexStatistics {
+    optional uint64 number_of_documents     = 1;
+    optional double average_document_length = 2;
 };
