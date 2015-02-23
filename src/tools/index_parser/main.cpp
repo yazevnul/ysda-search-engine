@@ -1,14 +1,21 @@
-#include <library/index/index.pb.h>
+#include <library/accuarate_accumulate/kahan_accumulator.h>
 #include <library/index/index.h>
+#include <library/index/index.pb.h>
+#include <library/protobuf_helpers/serialization.h>
+#include <library/timer/raii_printing_timer.h>
 
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <cstdint>
+#include <ctime>
 #include <fstream>
+#include <iostream>
 #include <istream>
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <unordered_map>
 #include <vector>
 
 
@@ -26,8 +33,8 @@ inline bool operator <(
 }
 
 
-yindex::Index ParseIndex(std::istream& input) {
-    yindex::Index index;
+yindex::InvertedIndex ParseIndex(std::istream& input) {
+    yindex::InvertedIndex index;
 
     std::vector<DocumentIdWithWordFrequency> documentIdsWithWordFrequencies;
     yindex::AssociatedDocuments entry;
@@ -64,19 +71,71 @@ yindex::Index ParseIndex(std::istream& input) {
 }
 
 
-inline yindex::Index ParseIndex(const std::string& file_name) {
+inline yindex::InvertedIndex ParseIndex(const std::string& file_name) {
     std::ifstream input(file_name);
     return ParseIndex(input);
+}
+
+
+yindex::IndexStatistics AddStatistics(yindex::InvertedIndex& index) {
+    std::unordered_map<yindex::DocumentId, uint64_t> document_to_length;
+    for (const auto& value: index) {
+        for (int jindex = 0; jindex < value.second.documents_size(); ++jindex) {
+            document_to_length[value.second.documents(jindex).document_id()]
+                += value.second.documents(jindex).word_frequency();
+        }
+    }
+
+    KahanAccumulator<double> average_document_length_calculator;
+    for (const auto& value: document_to_length) {
+        average_document_length_calculator += static_cast<double>(value.second)
+                                              / document_to_length.size();
+    }
+
+    const double average_document_legnth = average_document_length_calculator.get() == 0
+        ? 1
+        : average_document_length_calculator.get();
+    for (auto& value: index) {
+        for (int jindex = 0; jindex < value.second.documents_size(); ++jindex) {
+            value.second.mutable_documents(jindex)->set_dl_by_avg_dl(
+                static_cast<double>(
+                    document_to_length[value.second.documents(jindex).document_id()]
+                )
+                / average_document_legnth
+            );
+        }
+    }
+
+    yindex::IndexStatistics statistics;
+    statistics.set_number_of_documents(document_to_length.size());
+    statistics.set_average_document_length(average_document_legnth);
+
+    return statistics;
 }
 
 
 int main(int argc, char** argv) {
     const std::vector<std::string> args{argv + 1, argv + argc};
 
-    assert(2 == args.size());
+    assert(3 == args.size());
 
-    const yindex::Index index = ParseIndex(args[0]);
-    yindex::io::Save(index, args[1]);
+    yindex::InvertedIndex index;
+    {
+        RaiiPrintingTimer timer("Parsing index");
+        index = ParseIndex(args[0]);
+    }
+
+    yindex::IndexStatistics index_statistics;
+    {
+        RaiiPrintingTimer timer("Calculating statistics");
+        index_statistics = AddStatistics(index);
+    }
+
+    {
+        RaiiPrintingTimer timer("Saving to file");
+        yindex::io::Save(index, args[1]);
+        WriteDelimitedToFile(index_statistics, args[2]);
+    }
 
     return 0;
 }
