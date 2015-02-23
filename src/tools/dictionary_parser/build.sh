@@ -2,7 +2,7 @@
 
 if [ 'debug' = $1 ]; then
     clang++                                              \
-        -std=c++11                                       \
+        -std=c++1y                                       \
         -stdlib=libc++                                   \
         -g                                               \
         -Wall                                            \
@@ -19,7 +19,7 @@ if [ 'debug' = $1 ]; then
         -o dictionary_parser
 elif [ 'release' = $1 ]; then
     clang++                                              \
-        -std=c++11                                       \
+        -std=c++1y                                       \
         -stdlib=libc++                                   \
         -mllvm                                           \
         -inline-threshold=10000                          \
