@@ -98,9 +98,7 @@ yindex::IndexStatistics AddStatistics(yindex::InvertedIndex& index) {
     for (auto& value: index) {
         for (int jindex = 0; jindex < value.second.documents_size(); ++jindex) {
             value.second.mutable_documents(jindex)->set_dl_by_avg_dl(
-                static_cast<double>(
-                    document_to_length[value.second.documents(jindex).document_id()]
-                )
+                document_to_length[value.second.documents(jindex).document_id()]
                 / average_document_legnth
             );
         }
