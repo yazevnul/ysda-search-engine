@@ -223,7 +223,7 @@ std::vector<DocumentIdWithRelevance> CalculateBM25(
     const uint64_t number_of_documents,
     const BM25Parameters& bm25_parameters
 ){
-    // This may be done a much more effective, but we leave this that simple for now
+    // This may be done in a much more effective manner, but we leave this that simple for now
 
     std::vector<DocumentIdWithRelevance> result;
     for (const auto document_id: documents) {
