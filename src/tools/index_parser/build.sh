@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 
 if [ 'debug' = $1 ]; then
     clang++                                              \
