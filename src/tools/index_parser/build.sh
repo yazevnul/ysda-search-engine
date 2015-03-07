@@ -5,9 +5,10 @@ if [ 'debug' = $1 ]; then
         -std=c++1y                                       \
         -stdlib=libc++                                   \
         -g                                               \
-        -Wall                                            \
-        -Wextra                                          \
-        -pedantic                                        \
+        -Weverything                                     \
+        -Wno-c++98-compat-pedantic                       \
+        -Wno-padded                                      \
+        -Wno-missing-prototypes                          \
         -fcolor-diagnostics                              \
         -lprotobuf                                       \
         -I../../                                         \
@@ -24,9 +25,10 @@ elif [ 'release' = $1 ]; then
         -mllvm                                           \
         -inline-threshold=10000                          \
         -O3                                              \
-        -Wall                                            \
-        -Wextra                                          \
-        -pedantic                                        \
+        -Weverything                                     \
+        -Wno-c++98-compat-pedantic                       \
+        -Wno-padded                                      \
+        -Wno-missing-prototypes                          \
         -fcolor-diagnostics                              \
         -lprotobuf                                       \
         -I../../                                         \

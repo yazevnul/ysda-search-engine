@@ -8,6 +8,7 @@
 #include <cassert>
 #include <chrono>
 #include <cstdint>
+#include <cstdlib>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -92,7 +93,8 @@ yindex::IndexStatistics AddStatistics(yindex::InvertedIndex& index) {
                                               / document_to_length.size();
     }
 
-    const double average_document_legnth = average_document_length_calculator.get() == 0
+    constexpr double EPSILON = 1e-6;
+    const double average_document_legnth = fabs(average_document_length_calculator.get()) <= EPSILON
         ? 1
         : average_document_length_calculator.get();
     for (auto& value: index) {

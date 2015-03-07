@@ -1,10 +1,11 @@
 import os
 
 FLAGS = [
-    '-Wall',
-    '-Wextra',
-    '-Werror',
+    '-Weverything',
     '-std=c++14',
+    '-Wno-c++98-compat-pedantic',
+    '-Wno-padded',
+    '-Wno-missing-prototypes',
     '-stdlib=libc++',
 
     '-I', os.path.dirname(os.path.abspath(__file__))
