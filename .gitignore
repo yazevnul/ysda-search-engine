@@ -40,7 +40,7 @@ Session.vim
 *~
 
 ## For CMake [https://github.com/github/gitignore/blob/master/CMake.gitignore]
-MakeCache.txt
+CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
