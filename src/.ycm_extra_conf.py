@@ -2,7 +2,7 @@ import os
 
 FLAGS = [
     '-Weverything',
-    '-std=c++14',
+    '-std=c++1y',
     '-Wno-c++98-compat-pedantic',
     '-Wno-padded',
     '-Wno-missing-prototypes',
