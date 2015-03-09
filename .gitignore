@@ -1,3 +1,5 @@
+compile_commands.json
+
 ## For C++ [https://github.com/github/gitignore/blob/master/C%2B%2B.gitignore]
 # Compiled Object files
 *.slo

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(ysda-search-engine)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+
 set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
 
