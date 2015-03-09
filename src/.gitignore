@@ -2,5 +2,3 @@ document.pb.cc
 document.pb.h
 word.pb.cc
 word.pb.h
-
-.ycm_extra_conf.pyc
