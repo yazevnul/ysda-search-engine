@@ -4,12 +4,14 @@ Search engine we build during practice lessons on "Information Retrieval" in Yan
 ## Requirements
 * Clang 3.4+ or any other compiler that support C++14 standard
 * Google Protocol Buffers 2.6+
+* CMake
 
 ## Usage
 
 Build tools
 ```bash
-./build.sh
+cmake .
+make -j
 ```
 
 Prepare data
