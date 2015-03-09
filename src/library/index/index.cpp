@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <exception>
+#include <stdexcept>
 #include <string>
 
 #include <sys/types.h>

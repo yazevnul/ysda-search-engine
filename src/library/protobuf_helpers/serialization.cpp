@@ -5,8 +5,8 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/message_lite.h>
 
-#include <exception>
 #include <cstdint>
+#include <stdexcept>
 
 #include <sys/types.h>
 #include <sys/stat.h>
