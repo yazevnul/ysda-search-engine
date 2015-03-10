@@ -76,7 +76,7 @@ BagOfWords ToBagOfWords(
 
     BagOfWords word_with_frequency;
     for (const auto& value: word_to_frequency)
-        word_with_frequency.push_back({value.first, value.second});
+        word_with_frequency.push_back(WordIdWithFrequency{value.first, value.second});
 
     return word_with_frequency;
 }
