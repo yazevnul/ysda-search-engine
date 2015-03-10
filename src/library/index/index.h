@@ -1,16 +1,11 @@
 #pragma once
 
+#include "index.pb.h"
+#include "dictionary.pb.h"
+
 #include <cstdint>
 #include <string>
 #include <unordered_map>
-
-
-namespace yindex {
-
-    class DictionaryEntry;
-    class AssociatedDocuments;
-
-}  // namespace yindex
 
 
 namespace yindex {
