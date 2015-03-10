@@ -231,10 +231,12 @@ std::vector<DocumentIdWithRelevance> CalculateBM25(
 
     std::vector<DocumentIdWithRelevance> result;
     for (const auto document_id: documents) {
-        result.push_back({
-            document_id,
-            CalculateBM25(bow, document_id, index, number_of_documents, bm25_parameters)
-        });
+        DocumentIdWithRelevance dummy;
+        dummy.document_id = document_id;
+        dummy.relevance = CalculateBM25(
+            bow, document_id, index, number_of_documents, bm25_parameters
+        );
+        result.push_back(dummy);
     }
     std::sort(result.rbegin(), result.rend());
 
