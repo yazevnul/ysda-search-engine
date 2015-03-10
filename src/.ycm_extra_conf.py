@@ -123,8 +123,6 @@ def fix_compilation_database_for_this_os(flags):
 
 def FlagsForFile(filename, **kwargs):
     if database:
-        with open('/Users/yazevnul/Documents/my/github/ysda-search-engine/dbg_out.txt', 'w') as fout:
-            print >> fout, 'database found'
         # Bear in mind that compilation_info.compiler_flags_ does NOT return a
         # python list, but a "list-like" StringVec object
         compilation_info = get_compilation_info_for_file(filename)
@@ -137,8 +135,6 @@ def FlagsForFile(filename, **kwargs):
         )
         fix_compilation_database_for_this_os(final_flags)
     else:
-        with open('/Users/yazevnul/Documents/my/github/ysda-search-engine/dbg_out.txt', 'w') as fout:
-            print >> fout, 'database wasn\'t found'
         relative_to = get_direcotry_of_this_script()
         patch_flags_for_this_os()
         final_flags = make_relative_paths_in_flags_absolute(FLAGS, relative_to)
