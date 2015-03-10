@@ -283,9 +283,14 @@ int main(int argc, char** argv) {
         Print(exact_boolean_documents, std::cout);
         std::cout << std::endl;
 
+        BM25Parameters bm25_parameters;
+        bm25_parameters.k_one = 1.2;
+        bm25_parameters.k_three = 100;
+        bm25_parameters.b = 0.75;
+
         const auto bm25_fuzzy_boolean_documents = CalculateBM25(
             bow, fuzzy_boolean_documents, index, index_statistics.number_of_documents(),
-            {1.2, 100, 0.75}
+            bm25_parameters
         );
         std::cout << "Documents BM25(fuzzy boolean search) [" << bm25_fuzzy_boolean_documents.size()
                   << "]:";
@@ -294,7 +299,7 @@ int main(int argc, char** argv) {
 
         const auto bm25_exact_boolean_documents = CalculateBM25(
             bow, exact_boolean_documents, index, index_statistics.number_of_documents(),
-            {1.2, 100, 0.75}
+            bm25_parameters
         );
         std::cout << "Documents BM25(exact boolean search) [" << bm25_exact_boolean_documents.size()
                   << "]:";
