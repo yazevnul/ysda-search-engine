@@ -75,8 +75,12 @@ BagOfWords ToBagOfWords(
     }
 
     BagOfWords word_with_frequency;
-    for (const auto& value: word_to_frequency)
-        word_with_frequency.push_back(WordIdWithFrequency{value.first, value.second});
+    for (const auto& value: word_to_frequency) {
+        WordIdWithFrequency dummy;
+        dummy.word_id = value.first;
+        dummy.frequency = value.second;
+        word_with_frequency.push_back(dummy);
+    }
 
     return word_with_frequency;
 }
