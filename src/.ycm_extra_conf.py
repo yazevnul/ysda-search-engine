@@ -4,12 +4,19 @@ import ycm_core
 FLAGS = [
     '-Weverything',
     '-std=c++1y',
+
+    # disable annoying warnings
     '-Wno-c++98-compat-pedantic',
-    '-Wno-padded',
+    '-Wno-global-constructors',
     '-Wno-missing-prototypes',
+    '-Wno-missing-variable-declarations',
+    '-Wno-padded',
+    '-Wno-unused-macros',
+    '-Wno-missing-prototypes',
+
     '-stdlib=libc++',
 
-    '-I', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src')
+    '-I', os.path.dirname(os.path.abspath(__file__))
 ]
 
 
@@ -25,7 +32,7 @@ else:
 SOURCE_EXTENSIONS = ['.cpp', '.cc', '.c', ]
 
 
-def get_direcotry_of_this_script():
+def get_directory_of_this_script():
     return os.path.dirname(os.path.abspath(__file__))
 
 
@@ -121,23 +128,28 @@ def fix_compilation_database_for_this_os(flags):
         raise RuntimeError('Unknown platform!')
 
 
+def make_flags_without_database():
+    relative_to = get_directory_of_this_script()
+    patch_flags_for_this_os()
+    final_flags = make_relative_paths_in_flags_absolute(FLAGS, relative_to)
+    return final_flags
+
+
 def FlagsForFile(filename, **kwargs):
     if database:
         # Bear in mind that compilation_info.compiler_flags_ does NOT return a
         # python list, but a "list-like" StringVec object
         compilation_info = get_compilation_info_for_file(filename)
-        if not compilation_info:
-            return None
-
-        final_flags = make_relative_paths_in_flags_absolute(
-            compilation_info.compiler_flags_,
-            compilation_info.compiler_working_dir_
-        )
-        fix_compilation_database_for_this_os(final_flags)
+        if compilation_info:
+            final_flags = make_relative_paths_in_flags_absolute(
+                compilation_info.compiler_flags_,
+                compilation_info.compiler_working_dir_
+            )
+            fix_compilation_database_for_this_os(final_flags)
+        else:
+            final_flags = make_flags_without_database()
     else:
-        relative_to = get_direcotry_of_this_script()
-        patch_flags_for_this_os()
-        final_flags = make_relative_paths_in_flags_absolute(FLAGS, relative_to)
+        final_flags = make_flags_without_database()
 
     return {
         'flags': final_flags,
