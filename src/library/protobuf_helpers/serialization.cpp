@@ -22,7 +22,7 @@ void WriteDelimitedTo(
 
     // Write the size.
     const int size = message.ByteSize();
-    output.WriteVarint32(size);
+    output.WriteVarint32(static_cast<uint32_t>(size));
 
     uint8_t* buffer = output.GetDirectBufferForNBytesAndAdvance(size);
     if (nullptr != buffer) {
@@ -51,7 +51,7 @@ bool ReadDelimitedFrom(
         return false;
 
     // Tell the stream not to read beyond that size.
-    auto limit = input.PushLimit(size);
+    auto limit = input.PushLimit(static_cast<int>(size));
 
     // Parse the message.
     if (!message->MergePartialFromCodedStream(&input))
@@ -104,3 +104,4 @@ void ReadDelimitedFromFile(const std::string& file_name, google::protobuf::Messa
     if (!return_value)
         throw std::runtime_error("failed to parse protobuf message");
 }
+
