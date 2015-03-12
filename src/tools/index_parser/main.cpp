@@ -87,7 +87,7 @@ yindex::IndexStatistics AddStatistics(yindex::InvertedIndex& index) {
         }
     }
 
-    KahanAccumulator<double> average_document_length_calculator;
+    yaccumulate::KahanAccumulator<double> average_document_length_calculator;
     for (const auto& value: document_to_length) {
         average_document_length_calculator += static_cast<double>(value.second)
                                               / document_to_length.size();
