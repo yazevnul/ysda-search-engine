@@ -1,4 +1,4 @@
-project(ysda)
+project(search-engine)
 
 find_package(Protobuf REQUIRED)
 if(NOT PROTOBUF_FOUND)
