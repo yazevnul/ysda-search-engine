@@ -9,11 +9,5 @@ endif()
 
 find_package(Threads REQUIRED)
 
-add_subdirectory(library/accuarate_accumulate)
-add_subdirectory(library/index)
-add_subdirectory(library/protobuf_helpers)
-add_subdirectory(library/timer)
-
-add_subdirectory(tools/dictionary_parser)
-add_subdirectory(tools/index_parser)
-add_subdirectory(tools/ranker)
+add_subdirectory(library)
+add_subdirectory(tools)
