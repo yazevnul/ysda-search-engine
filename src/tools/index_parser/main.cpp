@@ -121,18 +121,18 @@ int main(int argc, char** argv) {
 
     yindex::InvertedIndex index;
     {
-        RaiiPrintingTimer timer("Parsing index");
+        ytimer::RaiiPrintingTimer timer("Parsing index");
         index = ParseIndex(args[0]);
     }
 
     yindex::IndexStatistics index_statistics;
     {
-        RaiiPrintingTimer timer("Calculating statistics");
+        ytimer::RaiiPrintingTimer timer("Calculating statistics");
         index_statistics = AddStatistics(index);
     }
 
     {
-        RaiiPrintingTimer timer("Saving to file");
+        ytimer::RaiiPrintingTimer timer("Saving to file");
         yindex::io::Save(index, args[1]);
         yproto::WriteDelimitedToFile(index_statistics, args[2]);
     }

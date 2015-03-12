@@ -247,7 +247,7 @@ std::vector<DocumentIdWithRelevance> CalculateBM25(
 int main(int argc, char** argv) {
     const std::vector<std::string> args{argv + 1, argv + argc};
 
-    Timer timer;
+    ytimer::Timer timer;
 
     std::cout << "Loading data..." << std::endl;
     timer.Start();
