@@ -14,26 +14,34 @@ namespace google {
 }  // namespace google
 
 
-void WriteDelimitedTo(
-    const google::protobuf::MessageLite& message,
-    google::protobuf::io::ZeroCopyOutputStream* raw_output
-);
+namespace yproto {
 
-bool ReadDelimitedFrom(
-    google::protobuf::io::ZeroCopyInputStream* raw_input,
-    google::protobuf::MessageLite* message
-);
+    void WriteDelimitedTo(
+        const google::protobuf::MessageLite& message,
+        google::protobuf::io::ZeroCopyOutputStream* raw_output
+    );
 
-void WriteDelimitedToFile(
-const google::protobuf::MessageLite& message,
-    const std::string& file_name
-);
+    bool ReadDelimitedFrom(
+        google::protobuf::io::ZeroCopyInputStream* raw_input,
+        google::protobuf::MessageLite* message
+    );
 
-void ReadDelimitedFromFile(const std::string& file_name, google::protobuf::MessageLite& message);
+    void WriteDelimitedToFile(
+        const google::protobuf::MessageLite& message,
+        const std::string& file_name
+    );
 
-template <typename T>
-inline T ReadDelimitedFromFile(const std::string& file_name) {
-    T value;
-    ReadDelimitedFromFile(file_name, value);
-    return value;
-}
+    void ReadDelimitedFromFile(
+        const std::string& file_name,
+        google::protobuf::MessageLite& message
+    );
+
+    template <typename T>
+    inline T ReadDelimitedFromFile(const std::string& file_name) {
+        T value;
+        ReadDelimitedFromFile(file_name, value);
+        return value;
+    }
+
+}  // namespace yproto
+

@@ -14,7 +14,7 @@
 #include <unistd.h>
 
 
-void WriteDelimitedTo(
+void yproto::WriteDelimitedTo(
     const google::protobuf::MessageLite& message,
     google::protobuf::io::ZeroCopyOutputStream* raw_output
 ){
@@ -39,7 +39,7 @@ void WriteDelimitedTo(
 }
 
 
-bool ReadDelimitedFrom(
+bool yproto::ReadDelimitedFrom(
     google::protobuf::io::ZeroCopyInputStream* rawInput,
     google::protobuf::MessageLite* message
 ){
@@ -67,7 +67,7 @@ bool ReadDelimitedFrom(
 }
 
 
-void WriteDelimitedToFile(
+void yproto::WriteDelimitedToFile(
     const google::protobuf::MessageLite& message,
     const std::string& file_name
 ){
@@ -90,7 +90,9 @@ void WriteDelimitedToFile(
 }
 
 
-void ReadDelimitedFromFile(const std::string& file_name, google::protobuf::MessageLite& message) {
+void yproto::ReadDelimitedFromFile(
+    const std::string& file_name, google::protobuf::MessageLite& message
+){
     int fd = open(file_name.c_str(), O_RDONLY);
     if (-1 == fd)
         throw std::runtime_error("open failed");

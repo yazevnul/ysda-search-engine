@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
     {
         RaiiPrintingTimer timer("Saving to file");
         yindex::io::Save(index, args[1]);
-        WriteDelimitedToFile(index_statistics, args[2]);
+        yproto::WriteDelimitedToFile(index_statistics, args[2]);
     }
 
     return 0;

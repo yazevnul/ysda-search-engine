@@ -27,7 +27,7 @@ void yindex::io::Save(const yindex::Dictionary& dictionary, const std::string& f
 
         for (auto value: dictionary) {
             value.second.mutable_word()->set_word(value.first);
-            WriteDelimitedTo(value.second, &output);
+            yproto::WriteDelimitedTo(value.second, &output);
         }
 
     } catch (const std::exception& exc) {
@@ -51,7 +51,7 @@ yindex::Dictionary yindex::io::LoadDictionary(const std::string& file_name) {
 
     yindex::Dictionary dictionary;
     for (struct {yindex::DictionaryEntry value; std::string word; } loop;
-         ReadDelimitedFrom(&input, &loop.value);)
+            yproto::ReadDelimitedFrom(&input, &loop.value);)
     {
         loop.word = loop.value.word().word();
         assert(dictionary.find(loop.word) == dictionary.end());
@@ -80,8 +80,8 @@ void yindex::io::Save(const yindex::InvertedIndex& index, const std::string& fil
         for (const auto& value: index) {
             dummy_word.set_word_id(value.first);
 
-            WriteDelimitedTo(dummy_word, &output);
-            WriteDelimitedTo(value.second, &output);
+            yproto::WriteDelimitedTo(dummy_word, &output);
+            yproto::WriteDelimitedTo(value.second, &output);
         }
     } catch (const std::exception& exc) {
         if (-1 == close(fd))
@@ -103,10 +103,10 @@ yindex::InvertedIndex yindex::io::LoadIndex(const std::string& file_name) {
     google::protobuf::io::FileInputStream input(fd);
 
     yindex::InvertedIndex index;
-    for (yindex::WordInIndex dummy_word; ReadDelimitedFrom(&input, &dummy_word);) {
+    for (yindex::WordInIndex dummy_word; yproto::ReadDelimitedFrom(&input, &dummy_word);) {
         assert(index.find(dummy_word.word_id()) == index.end());
 
-        if (!ReadDelimitedFrom(&input, &index[dummy_word.word_id()]))
+        if (!yproto::ReadDelimitedFrom(&input, &index[dummy_word.word_id()]))
             throw std::runtime_error("failed to read associated documents");
     }
 

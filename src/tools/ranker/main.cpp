@@ -253,7 +253,7 @@ int main(int argc, char** argv) {
     timer.Start();
     const auto dictionary = yindex::io::LoadDictionary(args[0]);
     const auto index = yindex::io::LoadIndex(args[1]);
-    const auto index_statistics = ReadDelimitedFromFile<yindex::IndexStatistics>(args[2]);
+    const auto index_statistics = yproto::ReadDelimitedFromFile<yindex::IndexStatistics>(args[2]);
     std::cout << "Loading data...DONE in " << timer.Stop().count() << std::endl;
 
     std::cout << "Dictionary size is " << dictionary.size()
