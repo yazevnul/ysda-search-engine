@@ -1,4 +1,4 @@
-#include <library/accuarate_accumulate/kahan_accumulator.h>
+#include <library/accurate_accumulate/kahan_accumulator.h>
 #include <library/index/dictionary.pb.h>
 #include <library/index/index.h>
 #include <library/index/index.pb.h>
