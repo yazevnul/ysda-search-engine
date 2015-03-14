@@ -24,8 +24,7 @@ if [ ${CXX} == 'clang++' ]; then
         libllvm-3.5-ocaml-dev   \
         libclang-common-3.5-dev \
         llvm-3.5-dev            \
-        libobjc-4.8-dev         \
-        libc++1
+        libobjc-4.8-dev
     sudo apt-get autoremove -y libgeos-3.2.2
     sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-3.5/bin/clang 20
     sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-3.5/bin/clang++ 20
