@@ -8,4 +8,4 @@ sudo apt-get install -y \
     protobuf-compiler   \
     libprotobuf-dev
 
-sudo apdate-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
