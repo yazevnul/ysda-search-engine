@@ -26,7 +26,7 @@ if [ ${CXX} == 'clang++' ]; then
         llvm-3.5-dev            \
         libgcc-4.8-dev          \
         libobjc-4.8-dev         \
-        libc++1-3.5
+        libc++1
     sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-3.5/bin/clang 20
     sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-3.5/bin/clang++ 20
 
