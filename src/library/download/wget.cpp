@@ -32,7 +32,7 @@ ydownload::Response ydownload::WgetDownloader::Download(
     const std::string& url, const std::string& output_file_name
 ){
     const std::string command = std::string("wget '") + url + "'"
-        + " -O '" + output_file_name + "'"
+        + " --output-document '" + output_file_name + "'"
         + " --quiet";
     int rv = system(command.c_str());
     if (rv)
