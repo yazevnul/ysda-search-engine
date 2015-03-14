@@ -1,12 +1,11 @@
 #!/bin/bash -x
 
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update -qq
+sudo apt-get install -y gcc-4.8
+
 sudo apt-get install -y \
     protobuf-compiler   \
-    libprotobuf-dev     \
-    g++-4.8
+    libprotobuf-dev
 
-if [ "${CXX}" == 'g++' ]; then
-    export CXX='g++-4.8'
-    export CC='gcc-4.8'
-fi
+sudo apdate-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
