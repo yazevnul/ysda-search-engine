@@ -2,5 +2,5 @@
 
 sudo apt-get update -qq
 sudo apt-get install -y \
-    protobuf-compiler
+    protobuf-compiler   \
     libprotobuf-dev
