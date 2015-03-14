@@ -1,6 +1,6 @@
 #include "index.h"
-#include "index.pb.h"
-#include "dictionary.pb.h"
+#include "protos/index.pb.h"
+#include "protos/dictionary.pb.h"
 
 #include <library/protobuf_helpers/serialization.h>
 

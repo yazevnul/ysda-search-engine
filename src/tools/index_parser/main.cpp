@@ -1,6 +1,5 @@
 #include <library/accurate_accumulate/kahan_accumulator.h>
 #include <library/index/index.h>
-#include <library/index/index.pb.h>
 #include <library/protobuf_helpers/serialization.h>
 #include <library/timer/raii_printing_timer.h>
 

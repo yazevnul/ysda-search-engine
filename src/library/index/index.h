@@ -1,7 +1,7 @@
 #pragma once
 
-#include "index.pb.h"
-#include "dictionary.pb.h"
+#include "protos/index.pb.h"
+#include "protos/dictionary.pb.h"
 
 #include <cstdint>
 #include <string>

@@ -1,5 +1,4 @@
 #include <library/index/index.h>
-#include <library/index/dictionary.pb.h>
 
 #include <cassert>
 #include <cstdint>
