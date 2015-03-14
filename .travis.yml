@@ -1,0 +1,13 @@
+language: cpp
+notifications:
+    email: false
+os:
+    - linux
+    - osx
+compiler:
+    - clang
+    - gcc
+before_script:
+    - cmake .
+script:
+    - make
