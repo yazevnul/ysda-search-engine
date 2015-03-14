@@ -8,6 +8,8 @@ sudo apt-get install -y gcc-4.8 g++-4.8
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
 
+which g++
+where g++
 g++ --version
 
 ## GCC-4.8 installation END
@@ -24,11 +26,13 @@ if [ ${CXX} == 'clang++' ]; then
         libclang-common-3.5-dev \
         llvm-3.5-dev            \
         libgcc-4.8-dev          \
-        libobjc-4.8-dev
+        libobjc-4.8-dev         \
+        libc++1-3.5             \
     sudo update-alternatives --install /usr/bin/clang clang /usr/lib/llvm-3.5/bin/clang 20
     sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/lib/llvm-3.5/bin/clang++ 20
-    ls -l /usr/bin # delete me!
 
+    which clang++
+    where clang++
     clang++ --version
 fi
 
