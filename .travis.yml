@@ -7,6 +7,11 @@ os:
 compiler:
     - clang
     - gcc
+before_install:
+    - echo ${LANG}
+    - echo ${LC_ALL}
+    - if [ ${TRAVIS_OS_NAME} == 'linux' ]; then ./scripts/install_deps/linux.sh
+    - if [ ${TRAVIS_OS_NAME} == 'osx' ]; then ./scripts/install_deps/osx.sh
 before_script:
     - cmake .
 script:
