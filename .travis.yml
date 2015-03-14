@@ -7,6 +7,8 @@ os:
 compiler:
     - clang
     - gcc
+
+
 before_install:
     - echo ${LANG}
     - echo ${LC_ALL}
@@ -16,3 +18,7 @@ before_script:
     - cmake .
 script:
     - make
+
+branches:
+    only:
+        - master
