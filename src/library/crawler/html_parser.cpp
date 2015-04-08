@@ -12,7 +12,7 @@ static const std::regex SIMPLE_WIKIPEDIA_URL_REGEX{
 };
 
 
-std::unordered_set<std::string> crawler::GetSimpleWikipediaUrls(const std::string& page) {
+std::unordered_set<std::string> ycrawler::GetSimpleWikipediaUrls(const std::string& page) {
     std::unordered_set<std::string> urls;
 
     static const auto prefix = std::string{"http://simple.wikipedia.org"};

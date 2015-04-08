@@ -38,7 +38,7 @@ int main(const int argc, const char* argv[]) {
     }
 
     const auto file_content = ReadFile(page);
-    const auto urls_in_file = crawler::GetSimpleWikipediaUrls(file_content);
+    const auto urls_in_file = ycrawler::GetSimpleWikipediaUrls(file_content);
 
     std::cout << "URLs found: " << urls_in_file.size() << '\n';
     for (auto&& url: urls_in_file) {

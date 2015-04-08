@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace crawler {
+namespace ycrawler {
 
     std::unordered_set<std::string> GetSimpleWikipediaUrls(const std::string& page);
 
