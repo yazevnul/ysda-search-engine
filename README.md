@@ -12,8 +12,7 @@ Search engine we build during practice lessons on "Information Retrieval" in Yan
 
 Build tools
 ```bash
-cmake .
-make -j
+cmake -DCMAKE_BUILD_TYPE=Release . && make -j
 ```
 
 Prepare data
