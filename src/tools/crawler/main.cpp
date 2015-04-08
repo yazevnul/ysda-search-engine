@@ -41,7 +41,7 @@ std::string ReadFile(const std::string& file_name) {
 
 int main(const int argc, const char* argv[]) {
     if (2 != argc) {
-        std::cerr << "Usage: links_getter url" << std::endl;
+        std::cerr << "Usage: links_parser url" << std::endl;
         return EXIT_FAILURE;
     }
 
