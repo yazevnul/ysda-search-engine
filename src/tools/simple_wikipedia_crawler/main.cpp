@@ -18,7 +18,7 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
     auto config = ycrawler::SimpleWikipediaCrawler::Config{};
 
     // parsing
-    auto input = std::ifstream{file_name.c_str()};
+    auto&& input = std::ifstream{file_name.c_str()};
     for (std::string line; std::getline(input, line);) {
         if (line.empty()) {
             continue;
