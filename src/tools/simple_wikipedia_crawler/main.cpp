@@ -18,13 +18,13 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
     auto config = ycrawler::SimpleWikipediaCrawler::Config{};
 
     // parsing
-    std::ifstream input{file_name.c_str()};
+    auto&& input = std::ifstream{file_name};
     for (std::string line; std::getline(input, line);) {
         if (line.empty()) {
             continue;
         }
 
-        auto parser = std::stringstream{line};
+        auto&& parser = std::stringstream{line};
         auto field_name = std::string{};
         if (!std::getline(parser, field_name, '\t')) {
             throw std::runtime_error("Failed to retrieve field name while parsing config");
