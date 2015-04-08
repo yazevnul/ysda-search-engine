@@ -20,8 +20,7 @@ std::unordered_set<std::string> crawler::GetSimpleWikipediaUrls(const std::strin
     auto urls_begin = std::sregex_iterator(page.cbegin(), page.cend(), SIMPLE_WIKIPEDIA_URL_REGEX);
     const auto urls_end = std::sregex_iterator();
     for (auto it = urls_begin; urls_end != it; ++it) {
-        auto match = *it;
-        urls.insert(prefix + match[1].str());  // actual URL is at index 1
+        urls.insert(prefix + (*it)[1].str());  // actual URL is at index 1
     }
 
     return urls;
