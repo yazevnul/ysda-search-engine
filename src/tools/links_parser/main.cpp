@@ -1,4 +1,4 @@
-#include <library/crawler/html_parser.h>
+#include <library/crawler/url_extractor.h>
 #include <library/download/interface.h>
 #include <library/download/wget.h>
 

@@ -1,7 +1,7 @@
 project(crawler)
 
 set(SOURCES
-    html_parser.cpp
+    url_extractor.cpp
 )
 
 add_library(crawler ${SOURCES})
