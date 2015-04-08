@@ -15,12 +15,9 @@ namespace ydownload {
     public:
         virtual Response Download(const std::string& url, const std::string& output_file_name) = 0;
 
-        virtual ~IDownloader() = 0;
+        virtual ~IDownloader() {
+        }
     };
-
-
-    inline IDownloader::~IDownloader() {
-    }
 
 }  // namespace ydownload
 
