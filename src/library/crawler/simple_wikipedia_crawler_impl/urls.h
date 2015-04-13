@@ -24,7 +24,7 @@ namespace yswci {
             std::uint32_t tries = 0;  // number of failed download attempts
 
             //! Lesser tries than better
-            bool operator< (const UrlIdWithTries& other) noexcept {
+            bool operator< (const UrlIdWithTries& other) const noexcept {
                 if (tries < other.tries) {
                     return false;
                 } else if (tries > other.tries) {
@@ -44,6 +44,10 @@ namespace yswci {
 
     class UrlsQueue {
     public:
+        explicit UrlsQueue(const std::string& file_name)
+            : file_name_{file_name} {
+        }
+
         void Push(const url::UrlId url, const std::uint32_t tries = 0) {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
@@ -60,39 +64,23 @@ namespace yswci {
             return value;
         }
 
+        void Load();
+
+        void Save() const;
+
     private:
+        std::string file_name_;
         std::vector<url::UrlIdWithTries> heap_;
-        std::mutex mutex_;
-    };
-
-
-    template <typename T>
-    class VectorWithMutex {
-    public:
-        void Push(const T& value) {
-            std::lock_guard<std::mutex> lock_guard{mutex_};
-
-            data_.push_back(value);
-        }
-
-        void Push(T&& value) {
-            std::lock_guard<std::mutex> lock_guard{mutex_};
-
-            data_.push_back(std::forward<T>(value));
-        }
-
-        std::vector<T> Get() {
-            return std::move<std::vector<T>>(data_);
-        }
-
-    private:
-        std::vector<T> data_;
-        std::mutex mutex_;
+        mutable std::mutex mutex_;
     };
 
 
     class UrlToId {
     public:
+        explicit UrlToId(const std::string& file_name)
+            : file_name_{file_name} {
+        }
+
         bool Has(const std::string& url) const {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
@@ -133,7 +121,13 @@ namespace yswci {
             return it->second;
         }
 
+        void Load();
+
+        void Save() const;
+
     private:
+        std::string file_name_;
+
         std::unordered_map<std::string, url::UrlId> direct_;
         std::unordered_map<url::UrlId, std::string> reverse_;
 
