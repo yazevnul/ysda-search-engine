@@ -103,8 +103,7 @@ std::unique_ptr<ycrawler::ICrawler> MakeCrawler(const std::vector<std::string>& 
 
 
 int main(const int argc, const char* argv[]) {
-    const auto args = std::vector<std::string>{argv + 1, argv + argc};
-    auto crawler = MakeCrawler(args);
+    auto crawler = MakeCrawler({argv + 1, argv + argc});
 
     crawler->Start();
 
