@@ -26,6 +26,9 @@ public:
         throw std::runtime_error("Unimplemented");
     }
 
+    void Stop() {
+    }
+
     void Restore(const std::string& state_directory) {
         throw std::runtime_error("Unimplemented");
     }

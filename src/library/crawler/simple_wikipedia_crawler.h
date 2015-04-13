@@ -43,6 +43,9 @@ namespace ycrawler {
 
         virtual void Start() override;
 
+        // Will do nothing
+        virtual void Stop() override;
+
     private:
         class Impl;
 
