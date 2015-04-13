@@ -16,6 +16,7 @@ namespace ythread_pool {
 
         explicit ThreadPool(const std::uint32_t threads);
         ~ThreadPool();
+
         void Enqueue(Worker&& worker);
 
     private:
