@@ -1,0 +1,143 @@
+#pragma once
+
+#include <algorithm>
+#include <mutex>
+#include <stdexcept>
+#include <tuple>
+#include <unordered_map>
+#include <utility>
+#include <vector>
+
+#include <cstdint>
+
+//! yswci stands for "simple wikipedia crawler implementation"
+namespace yswci {
+
+    namespace url {
+
+        using UrlId = std::uint32_t;
+
+
+        struct UrlIdWithTries {
+            UrlId id = 0;             // url identifier
+            std::uint32_t tries = 0;  // number of failed download attempts
+
+            //! Lesser tries than better
+            bool operator< (const UrlIdWithTries& other) noexcept {
+                if (tries < other.tries) {
+                    return false;
+                } else if (tries > other.tries) {
+                    return true;
+                } else if (id < other.id) {
+                    return true;
+                } else if (id > other.id) {
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+        };
+
+    }  // namespace url
+
+
+    class UrlsQueue {
+    public:
+        void Push(const url::UrlId url, const std::uint32_t tries = 0) {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            heap_.push_back({url, tries});
+            std::push_heap(heap_.begin(), heap_.end());
+        }
+
+        url::UrlIdWithTries Pop() {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            std::pop_heap(heap_.begin(), heap_.end());
+            const auto value = heap_.back();
+            heap_.pop_back();
+            return value;
+        }
+
+    private:
+        std::vector<url::UrlIdWithTries> heap_;
+        std::mutex mutex_;
+    };
+
+
+    template <typename T>
+    class VectorWithMutex {
+    public:
+        void Push(const T& value) {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            data_.push_back(value);
+        }
+
+        void Push(T&& value) {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            data_.push_back(std::forward<T>(value));
+        }
+
+        std::vector<T> Get() {
+            return std::move<std::vector<T>>(data_);
+        }
+
+    private:
+        std::vector<T> data_;
+        std::mutex mutex_;
+    };
+
+
+    class UrlToId {
+    public:
+        bool Has(const std::string& url) const {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            return direct_.find(url) != direct_.end();
+        }
+
+        bool Has(const url::UrlId& id) const {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            return reverse_.find(id) != reverse_.cend()
+        }
+
+        void Add(const std::string& url) const {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            const auto id = static_cast<url::UrlId>(direct_.size() + 1);
+            direct_.insert({url, id});
+            reverse_.insert({id, url});
+        }
+
+        url::UrlId Get(const std::string& url) const {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            auto it = direct_.find(url);
+            if (direct_.end() == it) {
+                throw std::runtime_error{"Unable to get ID"};
+            }
+            return it->second;
+        }
+
+        std::string Get(const url::UrlId& id) const {
+            std::lock_guard<std::mutex> lock_guard{mutex_};
+
+            auto it = reverse_.find(id);
+            if (direct_.end() == it) {
+                throw std::runtime_error{"Unable to get URL"};
+            }
+            return it->second;
+        }
+
+    private:
+        std::unordered_map<std::string, url::UrlId> direct_;
+        std::unordered_map<url::UrlId, std::string> reverse_;
+
+        mutable std::mutex mutex_;
+    };
+
+}  // namespace yswci
+
