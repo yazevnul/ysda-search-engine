@@ -8,6 +8,7 @@ FLAGS = [
     # disable annoying warnings
     '-Wno-c++98-compat-pedantic',
     '-Wno-exit-time-destructors',
+    '-Wno-float-equal',
     '-Wno-global-constructors',
     '-Wno-missing-prototypes',
     '-Wno-missing-variable-declarations',
