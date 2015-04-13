@@ -24,11 +24,11 @@ std::string ReadFile(const std::string& file_name) {
 ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_name) {
     const auto json = [&file_name](){
         auto error = std::string{};
-        const auto json = json11::Json::parse(ReadFile(file_name), error);
-        if (json.is_null()) {
+        const auto res = json11::Json::parse(ReadFile(file_name), error);
+        if (res.is_null()) {
             throw std::runtime_error{error};
         }
-        return json;
+        return res;
     }();
     if (!json.is_object()) {
         std::runtime_error{"Malformed config"};
