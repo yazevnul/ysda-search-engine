@@ -11,4 +11,5 @@ target_link_libraries(simple_wikipedia_crawler
     ${CMAKE_THREAD_LIBS_INIT}
     crawler
     download
+    json
 )

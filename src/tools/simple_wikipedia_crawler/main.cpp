@@ -1,3 +1,5 @@
+#include <third_party/json11/json11.hpp>
+
 #include <library/crawler/simple_wikipedia_crawler.h>
 #include <library/download/wget.h>
 
@@ -13,55 +15,61 @@
 #include <cstdlib>
 
 
-// One day there would be JSON, but TSV for now
+std::string ReadFile(const std::string& file_name) {
+    std::ifstream file(file_name);
+    return {std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
+}
+
+
 ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_name) {
+    const auto json = [&file_name](){
+        auto error = std::string{};
+        const auto json = json11::Json::parse(ReadFile(file_name), error);
+        if (json.is_null()) {
+            throw std::runtime_error{error};
+        }
+        return json;
+    }();
+    if (!json.is_object()) {
+        std::runtime_error{"Malformed config"};
+    }
+
     auto config = ycrawler::SimpleWikipediaCrawler::Config{};
 
-    // parsing
-    auto&& input = std::ifstream{file_name};
-    for (std::string line; std::getline(input, line);) {
-        if (line.empty()) {
-            continue;
-        }
-
-        auto&& parser = std::stringstream{line};
-        auto field_name = std::string{};
-        if (!std::getline(parser, field_name, '\t')) {
-            throw std::runtime_error("Failed to retrieve field name while parsing config");
-        }
-
-        if ("threads" == field_name) {
-            parser >> config.threads;
-        } else if ("state_directory" == field_name) {
-            parser >> config.state_directory;
-        } else if ("documents_directory" == field_name) {
-            parser >> config.documents_directory;
-        } else if ("documents_data_directory" == field_name) {
-            parser >> config.documents_data_directory;
-        } else if ("urls_seed" == field_name) {
-            for (std::string url; std::getline(parser, url, '\t');) {
-                config.urls_seed.push_back(url);
+    for (const auto& kv: json.object_items()) {
+        if ("threads" == kv.first) {
+            config.threads = static_cast<std::uint32_t>(kv.second.int_value());
+        } else if ("state_directory" == kv.first) {
+            config.state_directory = kv.second.string_value();
+        } else if ("documents_directory" == kv.first) {
+            config.documents_directory = kv.second.string_value();
+        } else if ("documents_data_directory" == kv.first) {
+            config.documents_data_directory = kv.second.string_value();
+        } else if ("urls_seed") {
+            for (const auto& value: kv.second.array_items()) {
+                if (!value.is_string()) {
+                    throw std::runtime_error{"Malformed config"};
+                }
+                config.urls_seed.push_back(value.string_value());
             }
-        } else {
-            throw std::runtime_error(std::string("Failed to parse config on field: ") + field_name);
         }
     }
 
     // validation
     if (0 == config.threads) {
-        throw std::runtime_error("Number of threads is zero");
+        throw std::runtime_error{"Number of threads is zero"};
     }
     if (config.state_directory.empty()) {
-        throw std::runtime_error("state_directory is empty");
+        throw std::runtime_error{"state_directory is empty"};
     }
     if (config.documents_directory.empty()) {
-        throw std::runtime_error("documents_directory is empty");
+        throw std::runtime_error{"documents_directory is empty"};
     }
     if (config.documents_data_directory.empty()) {
-        throw std::runtime_error("documents_data_directory is empty");
+        throw std::runtime_error{"documents_data_directory is empty"};
     }
     if (config.urls_seed.empty()) {
-        throw std::runtime_error("URLs seed is empty!");
+        throw std::runtime_error{"URLs seed is empty!"};
     }
     return config;
 }

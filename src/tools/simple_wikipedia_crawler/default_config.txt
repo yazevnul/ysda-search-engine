@@ -1,6 +1,0 @@
-threads	4
-state_directory	crawler_state
-documents_directory	docs
-documents_data_directory	docs_data
-urls_seed	http://simple.wikipedia.org/wiki/Main_Page
-
