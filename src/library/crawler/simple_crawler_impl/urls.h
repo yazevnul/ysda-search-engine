@@ -48,10 +48,10 @@ namespace ysci {
             : file_name_{file_name} {
         }
 
-        void Push(const url::UrlId url, const std::uint32_t tries = 0) {
+        void Push(const url::UrlId id, const std::uint32_t tries = 0) {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
-            heap_.push_back({url, tries});
+            heap_.push_back({id, tries});
             std::push_heap(heap_.begin(), heap_.end());
         }
 
