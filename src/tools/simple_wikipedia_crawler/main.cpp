@@ -45,7 +45,7 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
             config.documents_directory = kv.second.string_value();
         } else if ("documents_data_directory" == kv.first) {
             config.documents_data_directory = kv.second.string_value();
-        } else if ("urls_seed") {
+        } else if ("urls_seed" == kv.second.string_value()) {
             for (const auto& value: kv.second.array_items()) {
                 if (!value.is_string()) {
                     throw std::runtime_error{"Malformed config"};
