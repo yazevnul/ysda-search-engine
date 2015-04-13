@@ -86,7 +86,7 @@ auto ParseConfig(const std::string& file_name) {
     if (0 == config.threads()) {
         throw std::runtime_error{"Number of threads is zero"};
     }
-    if (config.urls_seed().empty()) {
+    if (0 == config.urls_seed_size()) {
         throw std::runtime_error{"URLs seed is empty"};
     }
     if (0 == config.tries_limit()) {
