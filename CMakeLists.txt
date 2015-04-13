@@ -9,7 +9,7 @@ set(BUILD_SHARED_LIBS OFF)
 ### Compiler options BEGIN
 
 ## Build type independent options
-set(CMAKE_CXX_FLAGS "-std=c++1y")
+set(CMAKE_CXX_FLAGS "-std=c++14")
 
 # Compiler dependent options
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
