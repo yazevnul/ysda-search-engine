@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <mutex>
 #include <stdexcept>
+#include <string>
 #include <tuple>
 #include <unordered_map>
 #include <utility>
@@ -101,10 +102,10 @@ namespace yswci {
         bool Has(const url::UrlId& id) const {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
-            return reverse_.find(id) != reverse_.cend()
+            return reverse_.find(id) != reverse_.cend();
         }
 
-        void Add(const std::string& url) const {
+        void Add(const std::string& url) {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
             const auto id = static_cast<url::UrlId>(direct_.size() + 1);
@@ -126,7 +127,7 @@ namespace yswci {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
             auto it = reverse_.find(id);
-            if (direct_.end() == it) {
+            if (reverse_.end() == it) {
                 throw std::runtime_error{"Unable to get URL"};
             }
             return it->second;
