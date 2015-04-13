@@ -9,8 +9,6 @@ sudo apt-get install -y \
     cpp-5               \
     g++-5               \
     gcc-5               \
-    lib1g               \
-    libc6               \
     libc6               \
     libc6-dev           \
     libcc1-0            \
@@ -19,8 +17,6 @@ sudo apt-get install -y \
     libgmp10            \
     libisl10            \
     libmpc2             \
-    libmpc2             \
-    libmpfr4            \
     libmpfr4            \
     libstdc++-5-dev     \
     libstdc++6          \
