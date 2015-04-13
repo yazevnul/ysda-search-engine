@@ -15,7 +15,7 @@
 class ycrawler::SimpleWikipediaCrawler::Impl {
 public:
     void SetDownloader(std::unique_ptr<ydownload::IDownloader>&& downloder) {
-        throw std::runtime_error("Unimplemented");
+        throw std::runtime_error{"Unimplemented"};
     }
 
     void SetConfig(const Config& config) {
@@ -23,14 +23,18 @@ public:
     }
 
     void Start() {
-        throw std::runtime_error("Unimplemented");
+        throw std::runtime_error{"Unimplemented"};
     }
 
     void Stop() {
     }
 
     void Restore(const std::string& state_directory) {
-        throw std::runtime_error("Unimplemented");
+        throw std::runtime_error{"Unimplemented"};
+    }
+
+    void MoveFailedToQueue() {
+        throw std::runtime_error{"Unimplemented"};
     }
 
 private:
@@ -64,6 +68,11 @@ void ycrawler::SimpleWikipediaCrawler::Stop() {
 
 void ycrawler::SimpleWikipediaCrawler::Restore(const std::string& state_directory) {
     pimpl_->Restore(state_directory);
+}
+
+
+void ycrawler::SimpleWikipediaCrawler::MoveFailedToQueue() {
+    pimpl_->MoveFailedToQueue();
 }
 
 

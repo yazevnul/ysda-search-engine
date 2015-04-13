@@ -30,6 +30,7 @@ namespace ycrawler {
             std::string documents_directory;
             std::string documents_data_directory;
             std::vector<std::string> urls_seed;
+            std::uint32_t tries_limit = 10;
         };
 
         SimpleWikipediaCrawler();
@@ -40,6 +41,8 @@ namespace ycrawler {
         void SetDownloader(std::unique_ptr<ydownload::IDownloader>&& downloder);
 
         void Restore(const std::string& state_directory);
+
+        void MoveFailedToQueue();
 
         virtual void Start() override;
 

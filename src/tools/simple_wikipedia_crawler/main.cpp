@@ -52,6 +52,8 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
                 }
                 config.urls_seed.push_back(value.string_value());
             }
+        } else if ("tries_limit" == kv.first) {
+            config.tries_limit = static_cast<std::uint32_t>(kv.second.int_value());
         }
     }
 
@@ -69,7 +71,10 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
         throw std::runtime_error{"documents_data_directory is empty"};
     }
     if (config.urls_seed.empty()) {
-        throw std::runtime_error{"URLs seed is empty!"};
+        throw std::runtime_error{"URLs seed is empty"};
+    }
+    if (0 == config.tries_limit) {
+        throw std::runtime_error{"Number of tries is zero"};
     }
     return config;
 }
