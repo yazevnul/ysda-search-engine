@@ -4,7 +4,27 @@
 
 sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 sudo apt-get update -qq
-sudo apt-get install -y gcc-5 g++-5
+sudo apt-get install -y \
+    binutils            \
+    cpp-5               \
+    g++-5               \
+    gcc-5               \
+    lib1g               \
+    libc6               \
+    libc6               \
+    libc6-dev           \
+    libcc1-0            \
+    libgcc-5-dev        \
+    libgcc1             \
+    libgmp10            \
+    libisl10            \
+    libmpc2             \
+    libmpc2             \
+    libmpfr4            \
+    libmpfr4            \
+    libstdc++-5-dev     \
+    libstdc++6          \
+    zlib1g
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
 
