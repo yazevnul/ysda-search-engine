@@ -14,10 +14,6 @@
 
 class ycrawler::SimpleCrawler::Impl {
 public:
-    void SetDownloader(std::unique_ptr<ydownload::IDownloader>&& downloder) {
-        throw std::runtime_error{"Unimplemented"};
-    }
-
     void SetConfig(const SimpleCrawlerConfig& config) {
         config_ = config;
     }
@@ -43,13 +39,6 @@ private:
 
 
 // ycrawler::SimpleCrawler implementation BEGIN
-
-void ycrawler::SimpleCrawler::SetDownloader(
-    std::unique_ptr<ydownload::IDownloader>&& downloader
-){
-    pimpl_->SetDownloader(std::forward<std::unique_ptr<ydownload::IDownloader>>(downloader));
-}
-
 
 void ycrawler::SimpleCrawler::SetConfig(const SimpleCrawlerConfig& config) {
     pimpl_->SetConfig(config);

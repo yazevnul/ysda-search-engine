@@ -30,8 +30,6 @@ namespace ycrawler {
 
         void SetConfig(const SimpleCrawlerConfig& config);
 
-        void SetDownloader(std::unique_ptr<ydownload::IDownloader>&& downloder);
-
         void Restore(const std::string& config_file_name);
 
         void MoveFailedToQueue();
