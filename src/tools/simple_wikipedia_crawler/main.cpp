@@ -1,7 +1,9 @@
+#include <third_party/cxxopts/src/cxxopts.hpp>
 #include <third_party/json11/json11.hpp>
 
 #include <library/crawler/simple_wikipedia_crawler.h>
 #include <library/download/wget.h>
+#include <library/mod_chooser/mod_chooser.h>
 
 #include <fstream>
 #include <iostream>
@@ -45,7 +47,7 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
             config.documents_directory = kv.second.string_value();
         } else if ("documents_data_directory" == kv.first) {
             config.documents_data_directory = kv.second.string_value();
-        } else if ("urls_seed" == kv.second.string_value()) {
+        } else if ("urls_seed" == kv.first) {
             for (const auto& value: kv.second.array_items()) {
                 if (!value.is_string()) {
                     throw std::runtime_error{"Malformed config"};
@@ -80,32 +82,114 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
 }
 
 
-std::unique_ptr<ycrawler::ICrawler> MakeCrawler(const std::vector<std::string>& args) {
-    auto crawler = std::make_unique<ycrawler::SimpleWikipediaCrawler>();
-    if (args[0] == "new") {
-        if (args.size() != 2) {
-            throw std::runtime_error("Usage: crawler config");
+namespace mode_new {
+
+    static const auto MODE_NAME = std::string{"new"};
+    static const auto MODE_DESCRIPTION = std::string{"Create new crawler"};
+
+    struct Args {
+        std::string config_file_name;
+    };
+
+
+    auto ParseOptions(int argc, char* argv[]) {
+        auto options = cxxopts::Options{MODE_NAME, std::string{"\n  "} + MODE_DESCRIPTION};
+        auto args = Args{};
+        options.add_options()
+            ("c,config",
+             "Crawler config file",
+             cxxopts::value<std::string>(args.config_file_name),
+             "FILE"
+            )(
+             "h,help",
+             "Print help"
+            );
+        options.parse(argc, argv);
+        if (options.count("help")) {
+            std::cout << options.help({""}) << std::endl;
+            std::exit(EXIT_SUCCESS);
         }
-        const auto config = ParseConfig(args[1]);
-        crawler->SetConfig(config);
-    } else if (args[0] == "restore") {
-        if (args.size() != 2) {
-            throw std::runtime_error("Usage: crawler state_directory");
-        }
-        crawler->Restore(args[1]);
-    } else {
-        throw std::runtime_error("Unknown mode");
+        return args;
     }
 
-    crawler->SetDownloader(std::make_unique<ydownload::WgetDownloader>());
-    return std::move(crawler);
-}
+
+    int Main(int argc, char* argv[]) {
+        const auto args = ParseOptions(argc, argv);
+        const auto config = ParseConfig(args.config_file_name);
+
+        auto crawler = std::make_unique<ycrawler::SimpleWikipediaCrawler>();
+        crawler->SetConfig(config);
+        crawler->Start();
+
+        return EXIT_SUCCESS;
+    }
+
+}  // namespace mode_new
 
 
-int main(const int argc, const char* argv[]) {
-    auto crawler = MakeCrawler({argv + 1, argv + argc});
+namespace mode_restore {
 
-    crawler->Start();
+    static const auto MODE_NAME = std::string{"restore"};
+    static const auto MODE_DESCRIPTION = std::string{"Restore crawler from state"};
 
-    return EXIT_SUCCESS;
+    struct Args {
+        std::string state_directory;
+        bool move_failed_to_queue = false;
+    };
+
+
+    auto ParseOptions(int argc, char* argv[]) {
+        auto options = cxxopts::Options{MODE_NAME, std::string{"\n  "} + MODE_DESCRIPTION};
+        auto args = Args{};
+        options.add_options()
+            ("state-directory",
+             "Crawler state directory",
+             cxxopts::value<std::string>(args.state_directory),
+             "DIR"
+            )(
+             "failed-to-queue",
+             "Move failed urls to queue",
+             cxxopts::value<bool>(args.move_failed_to_queue)
+            )(
+             "h,help",
+             "Print help"
+            );
+        options.parse(argc, argv);
+        if (options.count("help")) {
+            std::cout << options.help({""}) << std::endl;
+            std::exit(EXIT_SUCCESS);
+        }
+        return args;
+    }
+
+
+    int Main(int argc, char* argv[]) {
+        const auto args = ParseOptions(argc, argv);
+
+        auto crawler = std::make_unique<ycrawler::SimpleWikipediaCrawler>();
+        crawler->Restore(args.state_directory);
+        if (args.move_failed_to_queue) {
+            crawler->MoveFailedToQueue();
+        }
+        crawler->Start();
+
+        return EXIT_SUCCESS;
+    }
+
+}  // namespace mode_restore
+
+
+int main(int argc, char* argv[]) {
+    auto mod_chooser = ymod_chooser::ModChooser{"Crawl simple Wikipedia."};
+    mod_chooser.AddMode(
+        mode_new::MODE_NAME,
+        mode_new::Main,
+        mode_new::MODE_DESCRIPTION
+    );
+    mod_chooser.AddMode(
+        mode_restore::MODE_NAME,
+        mode_restore::Main,
+        mode_restore::MODE_DESCRIPTION
+    );
+    return mod_chooser.Run(argc, argv);
 }

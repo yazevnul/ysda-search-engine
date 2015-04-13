@@ -50,7 +50,7 @@ void ymod_chooser::ModChooser::AddMode(
 }
 
 
-int ymod_chooser::ModChooser::Run(const int argc, const char* argv[]) const {
+int ymod_chooser::ModChooser::Run(int argc, char* argv[]) const {
     if (argc < 2) {
         PrintHelp("Not enough arguments", argv[0], title_, mapping_, std::cerr);
         return EXIT_FAILURE;

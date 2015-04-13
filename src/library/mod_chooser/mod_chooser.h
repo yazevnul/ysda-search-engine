@@ -10,13 +10,13 @@ namespace ymod_chooser {
 
     class ModChooser {
     public:
-        using MainFunction = std::function<int(const int argc, const char* argv[])>;
+        using MainFunction = std::function<int(int argc, char* argv[])>;
 
         explicit ModChooser(const std::string& title);
 
         void AddMode(const std::string& name, MainFunction&& main, const std::string description);
 
-        int Run(const int argc, const char* argv[]) const;
+        int Run(int argc, char* argv[]) const;
 
     private:
         struct FunctionWithDescription {

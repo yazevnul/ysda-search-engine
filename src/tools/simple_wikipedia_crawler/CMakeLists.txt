@@ -12,4 +12,5 @@ target_link_libraries(simple_wikipedia_crawler
     crawler
     download
     json
+    mod_chooser
 )
