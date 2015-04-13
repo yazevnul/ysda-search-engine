@@ -1,6 +1,7 @@
 #pragma once
 
 #include "crawler_interface.h"
+#include "protos/simple_crawler_config.pb.h"
 
 #include <memory>
 #include <string>
@@ -24,23 +25,14 @@ namespace ycrawler {
 
     class SimpleCrawler: public ICrawler {
     public:
-        struct Config {
-            std::uint32_t threads = 4;
-            std::string state_directory;
-            std::string documents_directory;
-            std::string documents_data_directory;
-            std::vector<std::string> urls_seed;
-            std::uint32_t tries_limit = 10;
-        };
-
         SimpleCrawler();
         virtual ~SimpleCrawler();
 
-        void SetConfig(const Config& config);
+        void SetConfig(const SimpleCrawlerConfig& config);
 
         void SetDownloader(std::unique_ptr<ydownload::IDownloader>&& downloder);
 
-        void Restore(const std::string& state_directory);
+        void Restore(const std::string& config_file_name);
 
         void MoveFailedToQueue();
 

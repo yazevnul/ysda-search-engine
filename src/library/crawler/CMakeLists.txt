@@ -1,5 +1,6 @@
 project(crawler)
 
+add_subdirectory(protos)
 add_subdirectory(simple_crawler_impl)
 
 set(SOURCES

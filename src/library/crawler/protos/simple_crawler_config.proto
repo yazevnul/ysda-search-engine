@@ -1,0 +1,23 @@
+package ycrawler;
+
+
+message SimpleCrawlerConfig {
+    message State {
+        optional string directory                 = 1 [default = "simple_crawler_state"];
+        optional string url_to_id_file_name       = 2 [default = "url_to_id.tsv"];
+        optional string queued_urls_file_name     = 3 [default = "queued_urls.tsv"];
+        optional string failed_urls_file_name     = 4 [default = "failed_urls.tsv"];
+        optional string downloaded_urls_file_name = 5 [default = "downloaded_urls.tsv"];
+        optional string config_file_name          = 6 [default = "config.pb.bin"];
+    };
+    message Documents {
+        optional string documents_directory       = 1 [default = "docs"];
+        optional string documents_data_directory  = 2 [default = "docs_data"];
+    };
+
+    optional uint32 threads                        = 1 [default = 4];
+    repeated string urls_seed                      = 2;
+    optional uint32 tries_limit                    = 3 [default = 10];
+    optional State state                           = 4;
+    optional Documents documents                   = 5;
+};

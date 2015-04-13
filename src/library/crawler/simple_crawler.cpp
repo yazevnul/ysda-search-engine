@@ -18,7 +18,7 @@ public:
         throw std::runtime_error{"Unimplemented"};
     }
 
-    void SetConfig(const Config& config) {
+    void SetConfig(const SimpleCrawlerConfig& config) {
         config_ = config;
     }
 
@@ -29,7 +29,7 @@ public:
     void Stop() {
     }
 
-    void Restore(const std::string& state_directory) {
+    void Restore(const std::string& config_file_name) {
         throw std::runtime_error{"Unimplemented"};
     }
 
@@ -38,7 +38,7 @@ public:
     }
 
 private:
-    Config config_;
+    SimpleCrawlerConfig config_;
 };
 
 
@@ -51,7 +51,7 @@ void ycrawler::SimpleCrawler::SetDownloader(
 }
 
 
-void ycrawler::SimpleCrawler::SetConfig(const Config& config) {
+void ycrawler::SimpleCrawler::SetConfig(const SimpleCrawlerConfig& config) {
     pimpl_->SetConfig(config);
 }
 
@@ -66,8 +66,8 @@ void ycrawler::SimpleCrawler::Stop() {
 }
 
 
-void ycrawler::SimpleCrawler::Restore(const std::string& state_directory) {
-    pimpl_->Restore(state_directory);
+void ycrawler::SimpleCrawler::Restore(const std::string& config_file_name) {
+    pimpl_->Restore(config_file_name);
 }
 
 

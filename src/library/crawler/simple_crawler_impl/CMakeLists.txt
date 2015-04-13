@@ -7,3 +7,6 @@ set(SOURCES
 )
 
 add_library(simple_crawler_impl ${SOURCES})
+target_link_libraries(simple_crawler_impl
+    crawler_protos
+)
