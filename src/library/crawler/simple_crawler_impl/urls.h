@@ -11,8 +11,8 @@
 
 #include <cstdint>
 
-//! yswci stands for "simple wikipedia crawler implementation"
-namespace yswci {
+//! ysci stands for "simple crawler implementation"
+namespace ysci {
 
     namespace url {
 

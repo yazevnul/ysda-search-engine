@@ -22,7 +22,7 @@ namespace ydownload {
 
 namespace ycrawler {
 
-    class SimpleWikipediaCrawler: public ICrawler {
+    class SimpleCrawler: public ICrawler {
     public:
         struct Config {
             std::uint32_t threads = 4;
@@ -33,8 +33,8 @@ namespace ycrawler {
             std::uint32_t tries_limit = 10;
         };
 
-        SimpleWikipediaCrawler();
-        virtual ~SimpleWikipediaCrawler();
+        SimpleCrawler();
+        virtual ~SimpleCrawler();
 
         void SetConfig(const Config& config);
 

@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-namespace yswci {
+namespace ysci {
 
     template <typename T>
     class VectorWithMutex {

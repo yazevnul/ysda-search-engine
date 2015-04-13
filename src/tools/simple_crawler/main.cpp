@@ -1,7 +1,7 @@
 #include <third_party/cxxopts/src/cxxopts.hpp>
 #include <third_party/json11/json11.hpp>
 
-#include <library/crawler/simple_wikipedia_crawler.h>
+#include <library/crawler/simple_crawler.h>
 #include <library/download/wget.h>
 #include <library/mod_chooser/mod_chooser.h>
 
@@ -23,7 +23,7 @@ std::string ReadFile(const std::string& file_name) {
 }
 
 
-ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_name) {
+ycrawler::SimpleCrawler::Config ParseConfig(const std::string& file_name) {
     const auto json = [&file_name](){
         auto error = std::string{};
         const auto res = json11::Json::parse(ReadFile(file_name), error);
@@ -36,7 +36,7 @@ ycrawler::SimpleWikipediaCrawler::Config ParseConfig(const std::string& file_nam
         std::runtime_error{"Malformed config"};
     }
 
-    auto config = ycrawler::SimpleWikipediaCrawler::Config{};
+    auto config = ycrawler::SimpleCrawler::Config{};
 
     for (const auto& kv: json.object_items()) {
         if ("threads" == kv.first) {
@@ -117,7 +117,7 @@ namespace mode_new {
         const auto args = ParseOptions(argc, argv);
         const auto config = ParseConfig(args.config_file_name);
 
-        auto crawler = std::make_unique<ycrawler::SimpleWikipediaCrawler>();
+        auto crawler = std::make_unique<ycrawler::SimpleCrawler>();
         crawler->SetConfig(config);
         crawler->Start();
 
@@ -166,7 +166,7 @@ namespace mode_restore {
     int Main(int argc, char* argv[]) {
         const auto args = ParseOptions(argc, argv);
 
-        auto crawler = std::make_unique<ycrawler::SimpleWikipediaCrawler>();
+        auto crawler = std::make_unique<ycrawler::SimpleCrawler>();
         crawler->Restore(args.state_directory);
         if (args.move_failed_to_queue) {
             crawler->MoveFailedToQueue();

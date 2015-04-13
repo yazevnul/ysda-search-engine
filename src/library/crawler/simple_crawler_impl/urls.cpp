@@ -8,14 +8,14 @@
 #include <cassert>
 
 
-void yswci::UrlsQueue::Load() {
+void ysci::UrlsQueue::Load() {
     std::lock_guard<std::mutex> lock_guard{mutex_};
 
     heap_.clear();
 
     auto&& input = std::ifstream{file_name_};
     for (auto line = std::string{}; std::getline(input, line);) {
-        auto value = yswci::url::UrlIdWithTries{};
+        auto value = url::UrlIdWithTries{};
         auto&& parser = std::stringstream{line};
 
         parser >> value.id >> value.tries;
@@ -26,7 +26,7 @@ void yswci::UrlsQueue::Load() {
 }
 
 
-void yswci::UrlsQueue::Save() const {
+void ysci::UrlsQueue::Save() const {
     std::lock_guard<std::mutex> lock_guard{mutex_};
 
     auto&& output = std::ofstream{file_name_};
@@ -36,7 +36,7 @@ void yswci::UrlsQueue::Save() const {
 }
 
 
-void yswci::UrlToId::Load() {
+void ysci::UrlToId::Load() {
     std::lock_guard<std::mutex> lock_guard{mutex_};
 
     direct_.clear();
@@ -59,7 +59,7 @@ void yswci::UrlToId::Load() {
 }
 
 
-void yswci::UrlToId::Save() const {
+void ysci::UrlToId::Save() const {
     std::lock_guard<std::mutex> lock_guard{mutex_};
 
     auto&& output = std::ofstream{file_name_};

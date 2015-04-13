@@ -1,4 +1,4 @@
-project(simple_wikipedia_crawler)
+project(simple_crawler)
 
 set(SOURCES
     main.cpp
@@ -6,8 +6,8 @@ set(SOURCES
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}/../..")
 
-add_executable(simple_wikipedia_crawler ${SOURCES})
-target_link_libraries(simple_wikipedia_crawler
+add_executable(simple_crawler ${SOURCES})
+target_link_libraries(simple_crawler
     ${CMAKE_THREAD_LIBS_INIT}
     crawler
     download
