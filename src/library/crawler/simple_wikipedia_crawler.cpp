@@ -57,6 +57,11 @@ void ycrawler::SimpleWikipediaCrawler::Start() {
 }
 
 
+void ycrawler::SimpleWikipediaCrawler::Stop() {
+    pimpl_->Stop();
+}
+
+
 void ycrawler::SimpleWikipediaCrawler::Restore(const std::string& state_directory) {
     pimpl_->Restore(state_directory);
 }
