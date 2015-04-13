@@ -3,7 +3,7 @@ import ycm_core
 
 FLAGS = [
     '-Weverything',
-    '-std=c++1y',
+    '-std=c++14',
 
     # disable annoying warnings
     '-Wno-c++98-compat-pedantic',
