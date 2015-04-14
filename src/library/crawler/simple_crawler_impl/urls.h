@@ -51,7 +51,7 @@ namespace ysci {
         void Push(const url::UrlId id, const std::uint32_t tries = 0) {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
-            heap_.push_back(std::make_pair(id, tries));
+            heap_.push_back(url::UrlIdWithTries{id, tries});
             std::push_heap(heap_.begin(), heap_.end());
         }
 
