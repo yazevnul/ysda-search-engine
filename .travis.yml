@@ -1,21 +1,30 @@
-sudo: required
-language: cpp
+language: c++
+
 notifications:
     email: false
+
 os:
     - linux
+
 compiler:
     - clang
     - gcc
 
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - clang-3.6
+            - cmake
+            - gcc-5
+            - libprotobuf-dev
+            - protobuf-compiler
 
-before_install:
-    - echo ${LANG}
-    - echo ${LC_ALL}
-    - if [ ${TRAVIS_OS_NAME} == 'linux' ]; then ./scripts/install_deps/linux.sh; fi
-    - if [ ${TRAVIS_OS_NAME} == 'osx' ]; then ./scripts/install_deps/osx.sh; fi
+
 before_script:
     - cmake .
+
 script:
     - make
 
