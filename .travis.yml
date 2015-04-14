@@ -19,7 +19,19 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - binutils
+            - cpp-5
             - gcc-5
+            - libc6
+            - libcc1-0
+            - libgcc-5-dev
+            - libgcc1
+            - libgmp10
+            - libisl10
+            - libmpc2
+            - libmpfr4
+            - libstdc++6
+            - zlib1g
     - compiler: clang
       addons:
         apt:
