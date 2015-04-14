@@ -6,10 +6,10 @@ notifications:
 
 os: linux
 
-compiler:
-    - clang
-    - gcc
-
+addons:
+  packages:
+    - libprotobuf-dev
+    - protobuf-compiler
 
 matrix:
   include:
@@ -20,17 +20,20 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-5
-            - libprotobuf-dev
-            - protobuf-compiler
     - compiler: clang
       addons:
         apt:
           sources:
             - llvm-toolchain-precise-3.6
+            - ubuntu-toolchain-r-test
           packages:
             - clang-3.6
-            - libprotobuf-dev
-            - protobuf-compiler
+            - libclang-3.6-dev
+            - libclang-common-3.6-dev
+            - libgcc-4.9-dev
+            - libllvm3.6
+            - libobjc-4.9-dev
+            - libstdc++6
 
 before_script:
     - cmake .
