@@ -1,27 +1,36 @@
+sudo: false
 language: c++
 
 notifications:
-    email: false
+  email: false
 
-os:
-    - linux
+os: linux
 
 compiler:
     - clang
     - gcc
 
-addons:
-    apt:
-        sources:
-            - llvm-toolchain-precise-3.6
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
             - ubuntu-toolchain-r-test
-        packages:
-            - clang-3.6
-            - cmake
+          packages:
             - gcc-5
             - libprotobuf-dev
             - protobuf-compiler
-
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+            - libprotobuf-dev
+            - protobuf-compiler
 
 before_script:
     - cmake .
