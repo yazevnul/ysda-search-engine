@@ -1,50 +1,19 @@
-sudo: false
+sudo: required
+
 language: c++
 
 notifications:
-  email: false
+    email: false
 
 os: linux
 
-matrix:
-  include:
-    - compiler: gcc
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - binutils
-            - cpp-5
-            - gcc-5
-            - libc6
-            - libcc1-0
-            - libgcc-5-dev
-            - libgcc1
-            - libgmp10
-            - libisl10
-            - libmpc2
-            - libmpfr4
-            - libprotobuf-dev
-            - libstdc++6
-            - protobuf-compiler
-            - zlib1g
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-precise-3.6
-            - ubuntu-toolchain-r-test
-          packages:
-            - clang-3.6
-            - libclang-3.6-dev
-            - libclang-common-3.6-dev
-            - libgcc-4.9-dev
-            - libllvm3.6
-            - libobjc-4.9-dev
-            - libprotobuf-dev
-            - libstdc++6
-            - protobuf-compiler
+compiler:
+  - clang
+  - gcc
+
+
+before_install:
+  - if [ ${TRAVIS_OS_NAME} == 'linux' ]; then ./scripts/install_deps/linux.sh; fi
 
 before_script:
     - cmake .
