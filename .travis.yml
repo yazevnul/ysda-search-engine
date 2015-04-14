@@ -15,7 +15,6 @@ before_install:
     - echo ${LC_ALL}
     - if [ ${TRAVIS_OS_NAME} == 'linux' ]; then ./scripts/install_deps/linux.sh; fi
     - if [ ${TRAVIS_OS_NAME} == 'osx' ]; then ./scripts/install_deps/osx.sh; fi
-    - git submodule update --init --recursive
 before_script:
     - cmake .
 script:
