@@ -20,8 +20,18 @@ namespace ysci {
 
 
         struct UrlIdWithTries {
-            UrlId id = 0;             // url identifier
-            std::uint32_t tries = 0;  // number of failed download attempts
+            UrlId id;            // url identifier
+            std::uint32_t tries; // number of failed download attempts
+
+            UrlIdWithTries()
+                : id{0}
+                , tries{0} {
+            }
+
+            UrlIdWithTries(const UrlId id, const std::uint32_t tries)
+                : id{id}
+                , tries{tries} {
+            }
 
             //! Lesser tries than better
             bool operator< (const UrlIdWithTries& other) const noexcept {
@@ -51,7 +61,7 @@ namespace ysci {
         void Push(const url::UrlId id, const std::uint32_t tries = 0) {
             std::lock_guard<std::mutex> lock_guard{mutex_};
 
-            heap_.push_back(url::UrlIdWithTries{id, tries});
+            heap_.push_back({id, tries});
             std::push_heap(heap_.begin(), heap_.end());
         }
 
