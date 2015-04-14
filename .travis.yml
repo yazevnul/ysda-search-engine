@@ -6,11 +6,6 @@ notifications:
 
 os: linux
 
-addons:
-  packages:
-    - libprotobuf-dev
-    - protobuf-compiler
-
 matrix:
   include:
     - compiler: gcc
@@ -30,7 +25,9 @@ matrix:
             - libisl10
             - libmpc2
             - libmpfr4
+            - libprotobuf-dev
             - libstdc++6
+            - protobuf-compiler
             - zlib1g
     - compiler: clang
       addons:
@@ -45,7 +42,9 @@ matrix:
             - libgcc-4.9-dev
             - libllvm3.6
             - libobjc-4.9-dev
+            - libprotobuf-dev
             - libstdc++6
+            - protobuf-compiler
 
 before_script:
     - cmake .
