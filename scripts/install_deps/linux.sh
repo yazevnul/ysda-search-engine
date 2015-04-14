@@ -4,24 +4,10 @@
 
 sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 sudo apt-get update -qq
-dpkg --get-selections | grep -v deinstall
 sudo apt-get install --yes \
-    binutils               \
-    cpp-5                  \
     g++-5                  \
-    gcc-5                  \
-    libc6                  \
-    libc6-dev              \
-    libcc1-0               \
-    libgcc-5-dev           \
-    libgcc1                \
-    libgmp10               \
-    libisl10               \
-    libmpc2                \
-    libmpfr4               \
-    libstdc++-5-dev        \
-    libstdc++6             \
-    zlib1g
+    gcc-5
+sudo apt-get install --fix-broken
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
 
