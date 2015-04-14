@@ -4,6 +4,7 @@
 
 sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 sudo apt-get update -qq
+dpkg --get-selections | grep -v deinstall
 sudo apt-get install --yes \
     binutils               \
     cpp-5                  \
