@@ -7,7 +7,7 @@ sudo apt-get update -qq
 sudo apt-get install --yes \
     g++-5                  \
     gcc-5
-sudo apt-get install --fix-broken
+sudo apt-get install --fix-broken --yes
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 20
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 20
 
