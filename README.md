@@ -1,7 +1,5 @@
-# ysda-search-engine
+# ysda-search-engine [![Build Status](https://travis-ci.org/yazevnul/ysda-search-engine.svg?branch=master)](https://travis-ci.org/yazevnul/ysda-search-engine)
 Search engine we build during practice lessons on "Information Retrieval" in Yandex School of Data Analysis
-
-[![Build Status](https://travis-ci.org/yazevnul/ysda-search-engine.svg?branch=master)](https://travis-ci.org/yazevnul/ysda-search-engine)
 
 ## Requirements
 * Clang 3.4+ or any other compiler that support C++14 standard
