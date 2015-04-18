@@ -2,9 +2,9 @@ import os
 import ycm_core
 
 FLAGS = [
-    '-Weverything',
     '-std=c++14',
 
+    '-Weverything',
     # disable annoying warnings
     '-Wno-c++98-compat-pedantic',
     '-Wno-exit-time-destructors',
@@ -13,6 +13,7 @@ FLAGS = [
     '-Wno-missing-prototypes',
     '-Wno-missing-variable-declarations',
     '-Wno-padded',
+    '-Wno-reserved-id-macro',
     '-Wno-unused-macros',
 
     '-stdlib=libc++',
