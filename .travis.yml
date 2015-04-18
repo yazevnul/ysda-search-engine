@@ -37,7 +37,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+            - llvm-toolchain-precise # latest
           packages:
             - clang-3.7
             - libprotobuf-dev
