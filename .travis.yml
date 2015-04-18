@@ -20,6 +20,8 @@ addons:
       - clang-3.6
       - g++-4.9
       - gcc-4.9
+      - libprotobuf-dev
+      - protobuf-compiler
 
 before_install:
   - |
