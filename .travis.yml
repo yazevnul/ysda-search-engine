@@ -27,12 +27,16 @@ addons:
       - llvm-3.6-dev
 
 before_install:
-  - if [ ${CC} == 'clang' ]; then export CC=/usr/lib/llvm-3.6/bin/clang; fi
-  - if [ ${CXX} == 'clang++' ]; then export CXX=/usr/lib/llvm-3.6/bin/clang++; fi
-  - if [ ${CC} == 'gcc' ]; then export CC=/usr/bin/gcc-4.9; fi
-    if [ ${CXX} == 'g++' ]; then export CXX=/usr/bin/g++-4.9; fi
-  - eval "${CXX} --version"
-  - eval "${CC} --version"
+  - |
+    if [ ${CC} == 'clang' ]; then
+        export CC=/usr/lib/llvm-3.6/bin/clang
+        export CXX=/usr/lib/llvm-3.6/bin/clang++
+    elif [ ${CC} == 'gcc' ]; then
+        export CC=/usr/bin/gcc-4.9;
+        export CXX=/usr/bin/g++-4.9;
+    fi
+    eval "${CC} --version"
+    eval "${CXX} --version"
 
 before_script:
     - cmake .
