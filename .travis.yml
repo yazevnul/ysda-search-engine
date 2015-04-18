@@ -1,4 +1,4 @@
-sudo: required
+sudo: false
 
 language: c++
 
@@ -11,9 +11,26 @@ compiler:
   - clang
   - gcc
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+    packages:
+      - clang-3.6
+      - g++-4.9
+      - gcc-4.9
+      - libclang-3.6-dev
+      - libclang-common-3.6-dev
+      - libllvm-3.6-ocaml-dev
+      - libobjc-4.8-dev
+      - llvm-3.6-dev
 
 before_install:
-  - if [ ${TRAVIS_OS_NAME} == 'linux' ]; then ./scripts/install_deps/linux.sh; fi
+  - if [ ${CC} == 'clang' ]; then export CC=/usr/lib/llvm-3.6/bin/clang; fi
+  - if [ ${CXX} == 'clang++' ]; then export CXX=/usr/lib/llvm-3.6/bin/clang++; fi
+  - if [ ${CC} == 'gcc' ]; then export CC=/usr/bin/gcc-4.9; fi
+    if [ ${CXX} == 'g++' ]; then export CXX=/usr/bin/g++-4.9; fi
   - eval "${CXX} --version"
   - eval "${CC} --version"
 
