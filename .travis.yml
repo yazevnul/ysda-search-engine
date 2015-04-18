@@ -20,11 +20,6 @@ addons:
       - clang-3.6
       - g++-4.9
       - gcc-4.9
-      - libclang-3.6-dev
-      - libclang-common-3.6-dev
-      - libllvm-3.6-ocaml-dev
-      - libobjc-4.8-dev
-      - llvm-3.6-dev
 
 before_install:
   - |
