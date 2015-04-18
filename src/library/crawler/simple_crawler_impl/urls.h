@@ -28,9 +28,9 @@ namespace ysci {
                 , tries{0} {
             }
 
-            UrlIdWithTries(const UrlId id, const std::uint32_t tries)
-                : id{id}
-                , tries{tries} {
+            UrlIdWithTries(const UrlId id_other, const std::uint32_t tries_other)
+                : id{id_other}
+                , tries{tries_other} {
             }
 
             //! Lesser tries than better
