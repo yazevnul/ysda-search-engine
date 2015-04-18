@@ -10,6 +10,18 @@ os: linux
 matrix:
   include:
     - compiler: clang
+      env: CLANG_VERSION=3.5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.5
+          packages:
+            - clang-3.5
+            - libprotobuf-dev
+            - protobuf-compiler
+    - compiler: clang
+      env: CLANG_VERSION=3.6
       addons:
         apt:
           sources:
@@ -17,6 +29,17 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
+            - libprotobuf-dev
+            - protobuf-compiler
+    - compiler: clang
+      env: CLANG_VERSION=3.7
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
             - libprotobuf-dev
             - protobuf-compiler
     - compiler: gcc
@@ -33,8 +56,8 @@ matrix:
 before_install:
   - |
     if [ ${CC} == 'clang' ]; then
-        export CC=/usr/lib/llvm-3.6/bin/clang
-        export CXX=/usr/lib/llvm-3.6/bin/clang++
+        export CC="/usr/lib/llvm-${CLANG_VERSION}/bin/clang"
+        export CXX="/usr/lib/llvm-${CLANG_VERSION}/bin/clang++"
     elif [ ${CC} == 'gcc' ]; then
         export CC=/usr/bin/gcc-4.9;
         export CXX=/usr/bin/g++-4.9;
