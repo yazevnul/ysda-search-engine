@@ -10,17 +10,6 @@ os: linux
 matrix:
   include:
     - compiler: clang
-      env: CLANG_VERSION=3.5
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.5
-          packages:
-            - clang-3.5
-            - libprotobuf-dev
-            - protobuf-compiler
-    - compiler: clang
       env: CLANG_VERSION=3.6
       addons:
         apt:
