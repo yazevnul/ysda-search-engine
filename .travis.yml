@@ -7,21 +7,28 @@ notifications:
 
 os: linux
 
-compiler:
-  - clang
-  - gcc
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-    packages:
-      - clang-3.6
-      - g++-4.9
-      - gcc-4.9
-      - libprotobuf-dev
-      - protobuf-compiler
+matrix:
+  include:
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+            - libprotobuf-dev
+            - protobuf-compiler
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+            - gcc-4.9
+            - libprotobuf-dev
+            - protobuf-compiler
 
 before_install:
   - |
