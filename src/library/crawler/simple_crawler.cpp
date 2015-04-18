@@ -23,9 +23,10 @@ public:
     }
 
     void Stop() {
+        throw std::runtime_error{"Unimplemented"};
     }
 
-    void Restore(const std::string& config_file_name) {
+    void Restore(const std::string& /*config_file_name*/) {
         throw std::runtime_error{"Unimplemented"};
     }
 

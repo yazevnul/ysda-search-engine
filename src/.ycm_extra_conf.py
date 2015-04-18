@@ -13,7 +13,6 @@ FLAGS = [
     '-Wno-missing-prototypes',
     '-Wno-missing-variable-declarations',
     '-Wno-padded',
-    '-Wno-reserved-id-macro',
     '-Wno-unused-macros',
 
     '-stdlib=libc++',
