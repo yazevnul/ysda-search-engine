@@ -43,6 +43,7 @@ matrix:
             - libprotobuf-dev
             - protobuf-compiler
     - compiler: gcc
+      env: GCC_VERSION=4.9
       addons:
         apt:
           sources:
@@ -59,8 +60,8 @@ before_install:
         export CC="/usr/lib/llvm-${CLANG_VERSION}/bin/clang"
         export CXX="/usr/lib/llvm-${CLANG_VERSION}/bin/clang++"
     elif [ ${CC} == 'gcc' ]; then
-        export CC=/usr/bin/gcc-4.9;
-        export CXX=/usr/bin/g++-4.9;
+        export CC="/usr/bin/gcc-${GCC_VERSION}"
+        export CXX="/usr/bin/g++-${GCC_VERSION}"
     fi
     eval "${CC} --version"
     eval "${CXX} --version"
