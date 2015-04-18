@@ -1,8 +1,8 @@
 # ysda-search-engine [![Build Status](https://travis-ci.org/yazevnul/ysda-search-engine.svg?branch=master)](https://travis-ci.org/yazevnul/ysda-search-engine)
-Search engine we build during practice lessons on "Information Retrieval" in Yandex School of Data Analysis
+Search engine we build during practice lessons on "Information Retrieval" at Yandex School of Data Analysis
 
 ## Requirements
-* Clang 3.4+ or any other compiler that support C++14 standard
+* Clang 3.6+ or GCC-4.9+
 * Google Protocol Buffers 2.6+
 * CMake
 
