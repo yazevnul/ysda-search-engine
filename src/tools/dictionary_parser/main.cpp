@@ -22,7 +22,7 @@ auto ParseOptions(int argc, char* argv[]) {
     auto args = Args{};
     options.add_options()(
         "i,input",
-        "Dictionary. Expected format: word_id \\t word_frequency",
+        "Dictionary. Expected format: word \\t word_id \\t word_frequency",
         cxxopts::value<std::string>(args.input_file_name),
         "FILE"
     )(
