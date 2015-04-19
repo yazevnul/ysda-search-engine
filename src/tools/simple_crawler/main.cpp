@@ -109,15 +109,15 @@ namespace mode_new {
     auto ParseOptions(int argc, char* argv[]) {
         auto options = cxxopts::Options{MODE_NAME, std::string{"\n  "} + MODE_DESCRIPTION};
         auto args = Args{};
-        options.add_options()
-            ("c,config",
-             "Crawler config file",
-             cxxopts::value<std::string>(args.config_file_name),
-             "FILE"
-            )(
-             "h,help",
-             "Print help"
-            );
+        options.add_options()(
+            "c,config",
+            "Crawler config file",
+            cxxopts::value<>(args.config_file_name),
+            "FILE"
+        )(
+            "h,help",
+            "Print help"
+        );
         options.parse(argc, argv);
         if (options.count("help")) {
             std::cout << options.help({""}) << std::endl;
@@ -155,19 +155,19 @@ namespace mode_restore {
     auto ParseOptions(int argc, char* argv[]) {
         auto options = cxxopts::Options{MODE_NAME, std::string{"\n  "} + MODE_DESCRIPTION};
         auto args = Args{};
-        options.add_options()
-            ("c,config",
-             "Config saved by crawler (probably will be located inside crawler state directory)",
-             cxxopts::value<std::string>(args.config_file_name),
-             "FILE"
-            )(
-             "move-failed-to-queue",
-             "Move failed urls to queue",
-             cxxopts::value<bool>(args.move_failed_to_queue)
-            )(
-             "h,help",
-             "Print help"
-            );
+        options.add_options()(
+            "c,config",
+            "Config saved by crawler (probably will be located inside crawler state directory)",
+            cxxopts::value<>(args.config_file_name),
+            "FILE"
+        )(
+            "move-failed-to-queue",
+            "Move failed urls to queue",
+            cxxopts::value<>(args.move_failed_to_queue)
+        )(
+            "h,help",
+            "Print help"
+        );
         options.parse(argc, argv);
         if (options.count("help")) {
             std::cout << options.help({""}) << std::endl;
