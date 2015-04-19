@@ -9,17 +9,6 @@
 
 #include <cstdint>
 
-// forward declarations BEGIN
-
-namespace ydownload {
-
-    class IDownloader;
-
-}  // namespace ydownload
-
-
-// forward declarations END
-
 
 namespace ycrawler {
 
