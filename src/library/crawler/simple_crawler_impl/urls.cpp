@@ -102,7 +102,7 @@ std::vector<ycrawler::ysci::url::UrlId> ycrawler::ysci::url::Load(
     auto data = std::vector<ycrawler::ysci::url::UrlId>{};
     auto&& input = std::ifstream{file_name};
     for (auto line = std::string{}; std::getline(input, line);) {
-        auto parser = std::stringstream{line};
+        auto&& parser = std::stringstream{line};
         auto value = ycrawler::ysci::url::UrlId{};
         parser >> value;
         data.push_back(value);
