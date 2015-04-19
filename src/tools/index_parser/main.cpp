@@ -1,14 +1,12 @@
+#include <third_party/cxxopts/src/cxxopts.hpp>
+
 #include <library/accurate_accumulate/kahan_accumulator.h>
 #include <library/index/index.h>
 #include <library/protobuf_helpers/serialization.h>
 #include <library/timer/raii_printing_timer.h>
 
 #include <algorithm>
-#include <cassert>
 #include <chrono>
-#include <cstdint>
-#include <cstdlib>
-#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <istream>
@@ -17,6 +15,11 @@
 #include <tuple>
 #include <unordered_map>
 #include <vector>
+
+#include <cassert>
+#include <cstdint>
+#include <cstdlib>
+#include <ctime>
 
 
 struct DocumentIdWithWordFrequency {
@@ -113,15 +116,51 @@ yindex::IndexStatistics AddStatistics(yindex::InvertedIndex& index) {
 }
 
 
-int main(int argc, char** argv) {
-    const std::vector<std::string> args{argv + 1, argv + argc};
+struct Args {
+    std::string input_file_name;
+    std::string output_file_name;
+    std::string statistics_file_name;
+};
 
-    assert(3 == args.size());
+
+auto ParseOptions(int argc, char* argv[]) {
+    auto options = cxxopts::Options{argv[0], "\n  Parse index"};
+    auto args = Args{};
+    options.add_options()(
+        "i,input",
+        "Index. Expected format: word_id \\t doc_id:count \\t ...",
+        cxxopts::value<>(args.input_file_name),
+        "FILE"
+    )(
+        "o,output",
+        "Parsed index",
+        cxxopts::value<>(args.output_file_name),
+        "FILE"
+    )(
+        "s,statistics",
+        "Index stattistics",
+        cxxopts::value<>(args.statistics_file_name),
+        "FILE"
+    )(
+        "h,help",
+        "Print help"
+    );
+    options.parse(argc, argv);
+    if (options.count("help")) {
+        std::cout << options.help({""}) << std::endl;
+        std::exit(EXIT_SUCCESS);
+    }
+    return args;
+}
+
+
+int main(int argc, char** argv) {
+    const auto args = ParseOptions(argc, argv);
 
     yindex::InvertedIndex index;
     {
         ytimer::RaiiPrintingTimer timer("Parsing index");
-        index = ParseIndex(args[0]);
+        index = ParseIndex(args.input_file_name);
     }
 
     yindex::IndexStatistics index_statistics;
@@ -132,9 +171,9 @@ int main(int argc, char** argv) {
 
     {
         ytimer::RaiiPrintingTimer timer("Saving to file");
-        yindex::io::Save(index, args[1]);
-        yproto::WriteDelimitedToFile(index_statistics, args[2]);
+        yindex::io::Save(index, args.output_file_name);
+        yproto::WriteDelimitedToFile(index_statistics, args.statistics_file_name);
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
