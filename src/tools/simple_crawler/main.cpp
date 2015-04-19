@@ -63,7 +63,7 @@ auto ParseConfig(const std::string& file_name) {
                 } else if ("failed_urls_file_name" == ikv.first) {
                     config.mutable_state()->set_failed_urls_file_name(ikv.second.string_value());
                 } else if ("downloaded_urls_file_name" == ikv.first) {
-                    config.mutable_state()->set_downloaded_urls_file_name(ikv.second.string_value());
+                    config.mutable_state()->set_processed_urls_file_name(ikv.second.string_value());
                 } else if ("config_file_name" == ikv.first) {
                     config.mutable_state()->set_config_file_name(ikv.second.string_value());
                 }

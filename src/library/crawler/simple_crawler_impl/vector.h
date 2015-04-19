@@ -4,40 +4,47 @@
 #include <utility>
 #include <vector>
 
-namespace ysci {
 
-    template <typename T>
-    class VectorWithMutex {
-    public:
-        VectorWithMutex() = default;
-        explicit VectorWithMutex(const std::vector<T>& data)
-            : data_{data} {
-        }
+namespace ycrawler {
 
-        explicit VectorWithMutex(std::vector<T>&& data)
-            : data_{std::forward<std::vector<T>>(data)} {
-        }
+    namespace ysci {
 
-        void Push(const T& value) {
-            std::lock_guard<std::mutex> lock_guard{mutex_};
+        template <typename T>
+        class VectorWithMutex {
+        public:
+            VectorWithMutex() = default;
+            explicit VectorWithMutex(const std::vector<T>& data)
+                : data_{data} {
+            }
 
-            data_.push_back(value);
-        }
+            explicit VectorWithMutex(std::vector<T>&& data)
+                : data_{std::forward<std::vector<T>>(data)} {
+            }
 
-        void Push(T&& value) {
-            std::lock_guard<std::mutex> lock_guard{mutex_};
+            void Push(const T& value) {
+                std::lock_guard<std::mutex> lock_guard{mutex_};
+                data_.push_back(value);
+            }
 
-            data_.push_back(std::forward<T>(value));
-        }
+            void Push(T&& value) {
+                std::lock_guard<std::mutex> lock_guard{mutex_};
+                data_.push_back(std::forward<T>(value));
+            }
 
-        std::vector<T>&& Get() {
-            return std::move<std::vector<T>>(data_);
-        }
+            std::vector<T>&& Get() {
+                return std::move(data_);
+            }
 
-    private:
-        std::vector<T> data_;
-        std::mutex mutex_;
-    };
+            void Set(std::vector<T>&& data) {
+                data = std::move(data);
+            }
 
-}  // namespace yswci
+        private:
+            std::vector<T> data_;
+            std::mutex mutex_;
+        };
+
+    }  // namespace yswci
+
+}  // namespace ycrawler
 

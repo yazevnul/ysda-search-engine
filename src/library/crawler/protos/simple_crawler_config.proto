@@ -7,7 +7,7 @@ message SimpleCrawlerConfig {
         optional string url_to_id_file_name       = 2 [default = "url_to_id.tsv"];
         optional string queued_urls_file_name     = 3 [default = "queued_urls.tsv"];
         optional string failed_urls_file_name     = 4 [default = "failed_urls.tsv"];
-        optional string downloaded_urls_file_name = 5 [default = "downloaded_urls.tsv"];
+        optional string processed_urls_file_name  = 5 [default = "processed_urls.tsv"];
         optional string config_file_name          = 6 [default = "config.pb.bin"];
     };
     message Documents {
