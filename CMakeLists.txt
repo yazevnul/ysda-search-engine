@@ -24,6 +24,11 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-macros")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-weak-vtables")
 
+    # To disable warings in third_party/cxxopts
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-non-virtual-dtor")
+    # To disable warnings in protobuf
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-shorten-64-to-32")
+
     if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Darwin")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
     elseif ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
