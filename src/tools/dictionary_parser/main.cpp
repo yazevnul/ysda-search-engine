@@ -1,11 +1,46 @@
-#include <library/index/index.h>
+#include <third_party/cxxopts/src/cxxopts.hpp>
 
-#include <cassert>
-#include <cstdint>
+#include <library/index/index.h>
+#include <library/timer/raii_printing_timer.h>
+
 #include <fstream>
 #include <istream>
 #include <string>
 #include <vector>
+
+#include <cassert>
+#include <cstdint>
+
+struct Args {
+    std::string input_file_name;
+    std::string output_file_name;
+};
+
+
+auto ParseOptions(int argc, char* argv[]) {
+    auto options = cxxopts::Options{argv[0], "\n  Parse dictionary"};
+    auto args = Args{};
+    options.add_options()(
+        "i,input",
+        "Dictionary. Expected format: word_id \\t word_frequency",
+        cxxopts::value<std::string>(args.input_file_name),
+        "FILE"
+    )(
+        "o,output",
+        "Parsed dictionary.",
+        cxxopts::value<std::string>(args.output_file_name),
+        "FILE"
+    )(
+        "h,help",
+        "Print help"
+    );
+    options.parse(argc, argv);
+    if (options.count("help")) {
+        std::cout << options.help({""}) << std::endl;
+        std::exit(EXIT_SUCCESS);
+    }
+    return args;
+}
 
 
 yindex::Dictionary ParseDictionary(std::istream& input) {
@@ -29,18 +64,24 @@ yindex::Dictionary ParseDictionary(std::istream& input) {
 
 
 inline yindex::Dictionary ParseDictionary(const std::string& file_name) {
-    std::ifstream input(file_name);
+    auto&& input = std::ifstream{file_name};
     return ParseDictionary(input);
 }
 
 
 int main(int argc, char** argv) {
-    const std::vector<std::string> args{argv + 1, argv + argc};
+    const auto args = ParseOptions(argc, argv);
 
-    assert(args.size() == 2);
+    yindex::Dictionary dictionary;
+    {
+        ytimer::RaiiPrintingTimer timer("Parsing dictionary");
+        dictionary = ParseDictionary(args.input_file_name);
+    }
+    {
+        ytimer::RaiiPrintingTimer timer("Saving dictionary");
+        yindex::io::Save(dictionary, args.output_file_name);
+    }
 
-    const yindex::Dictionary dictionary = ParseDictionary(args[0]);
-    yindex::io::Save(dictionary, args[1]);
-
-    return 0;
+    return EXIT_SUCCESS;
 }
+
