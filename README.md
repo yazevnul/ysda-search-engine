@@ -16,16 +16,16 @@ cmake -DCMAKE_BUILD_TYPE=Release . && make -j
 Prepare data
 ```bash
 cd src/tools/dictionary_parser
-./dictionary_parser dictionary.txt dictionary.txt.bin
+./dictionary_parser -i dictionary.txt -o dictionary.txt.bin
 
 cd src/tools/index_parser
-./index_parser index.txt index.txt.bin index.txt.statistics.bin
+./index_parser -i index.txt -o index.txt.bin -s index.txt.statistics.bin
 ```
 
 Ranker interactive session
 ```bash
 ./ranker dictionary.txt.bin index.txt.bin. index.txt.statistics.bin
-$ ./ranker dictionary.txt.bin index.txt.bin index.txt.statistics.bin
+$ ./ranker -d dictionary.txt.bin -i index.txt.bin -s index.txt.statistics.bin
 Loading data...
 Loading data...DONE in 4.75734
 Dictionary size is 2711920, index size is 2711920, number of documents is 26351, average document length is 1378.05
