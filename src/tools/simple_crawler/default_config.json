@@ -9,7 +9,7 @@
         "url_to_id_file_name": "url_to_id.tsv",
         "queued_urls_file_name": "queued_urls.tsv",
         "failed_urls_file_name": "failed_urls.tsv",
-        "downloaded_urls_file_name": "downloaded_urls.tsv",
+        "processed_urls_file_name": "processed_urls.tsv",
         "config_file_name": "config.pb.bin"
     },
     "documents": {
