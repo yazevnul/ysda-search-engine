@@ -1,3 +1,5 @@
+#include <third_party/cxxopts/src/cxxopts.hpp>
+
 #include <library/accurate_accumulate/kahan_accumulator.h>
 #include <library/index/index.h>
 #include <library/protobuf_helpers/serialization.h>
@@ -5,14 +7,15 @@
 
 #include <algorithm>
 #include <array>
-#include <cinttypes>
-#include <cmath>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
+#include <cinttypes>
+#include <cmath>
 
 
 //! Will skip empty tokens
@@ -242,16 +245,55 @@ std::vector<DocumentIdWithRelevance> CalculateBM25(
 }
 
 
+struct Args {
+    std::string dictionary_file_name;
+    std::string index_file_name;
+    std::string index_statistics_file_name;
+};
+
+
+auto ParseOptions(int argc, char* argv[]) {
+    auto options = cxxopts::Options{argv[0], "\n  Parse index"};
+    auto args = Args{};
+    options.add_options()(
+        "d,dictionary",
+        "Dictionary",
+        cxxopts::value<>(args.dictionary_file_name),
+        "FILE"
+    )(
+        "i,index",
+        "Index",
+        cxxopts::value<>(args.index_file_name),
+        "FILE"
+    )(
+        "s,statistics",
+        "Index statistics",
+        cxxopts::value<>(args.index_statistics_file_name),
+        "FILE"
+    )(
+        "h,help",
+        "Print help"
+    );
+    options.parse(argc, argv);
+    if (options.count("help")) {
+        std::cout << options.help({""}) << std::endl;
+        std::exit(EXIT_SUCCESS);
+    }
+    return args;
+}
+
 int main(int argc, char** argv) {
-    const std::vector<std::string> args{argv + 1, argv + argc};
+    const auto args = ParseOptions(argc, argv);
 
     ytimer::Timer timer;
 
     std::cout << "Loading data..." << std::endl;
     timer.Start();
-    const auto dictionary = yindex::io::LoadDictionary(args[0]);
-    const auto index = yindex::io::LoadIndex(args[1]);
-    const auto index_statistics = yproto::ReadDelimitedFromFile<yindex::IndexStatistics>(args[2]);
+    const auto dictionary = yindex::io::LoadDictionary(args.dictionary_file_name);
+    const auto index = yindex::io::LoadIndex(args.index_file_name);
+    const auto index_statistics = yproto::ReadDelimitedFromFile<yindex::IndexStatistics>(
+        args.index_statistics_file_name
+    );
     std::cout << "Loading data...DONE in " << timer.Stop().count() << std::endl;
 
     std::cout << "Dictionary size is " << dictionary.size()
