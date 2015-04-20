@@ -1,93 +1,25 @@
 #include "urls.h"
 
+#include <library/save_load/save_load.h>
+
 #include <algorithm>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 #include <cassert>
 
 
-void ycrawler::ysci::UrlsQueue::Load() {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
-
-    if (file_name_.empty()) {
-        throw std::runtime_error{"file name is empty"};
-    }
-
-    heap_.clear();
-
-    auto&& input = std::ifstream{file_name_};
-    for (auto line = std::string{}; std::getline(input, line);) {
-        auto value = url::UrlIdWithTries{};
-        auto&& parser = std::stringstream{line};
-
-        parser >> value.id >> value.tries;
-        heap_.push_back(value);
-    }
-
-    std::make_heap(heap_.begin(), heap_.end());
-}
+// ysave_load::{Load,Save} specializations BEGIN
 
 
-void ycrawler::ysci::UrlsQueue::Save() const {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
-
-    if (file_name_.empty()) {
-        throw std::runtime_error{"file name is empty"};
-    }
-
-    auto&& output = std::ofstream{file_name_};
-    for (const auto& value: heap_) {
-        output << value.id << '\t' << value.tries << '\n';
-    }
-}
-
-
-void ycrawler::ysci::UrlToId::Load() {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
-
-    if (file_name_.empty()) {
-        throw std::runtime_error{"file name is empty"};
-    }
-
-    direct_.clear();
-    reverse_.clear();
-
-    auto&& input = std::ifstream{file_name_};
-    for (auto line = std::string{}; std::getline(input, line);) {
-        auto&& parser = std::stringstream{line};
-
-        auto url = std::string{};
-        auto id = url::UrlId{};
-        parser >> url >> id;
-
-        assert(direct_.find(url) == direct_.cend());
-        assert(reverse_.find(id) == reverse_.cend());
-
-        direct_.insert({url, id});
-        reverse_.insert({id, url});
-    }
-}
-
-
-void ycrawler::ysci::UrlToId::Save() const {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
-
-    if (file_name_.empty()) {
-        throw std::runtime_error{"file name is empty"};
-    }
-
-    auto&& output = std::ofstream{file_name_};
-    for (const auto& value: direct_) {
-        output << value.first << '\t' << value.second << '\n';
-    }
-}
-
-
-void ycrawler::ysci::url::Save(
-    const std::vector<UrlId>& data, const std::string& file_name
+template <>
+void ysave_load::Save<>(
+    const std::vector<ycrawler::sci::url::UrlId>& data, const std::string& file_name
 ){
     auto&& output = std::ofstream{file_name};
     for (const auto value: data) {
@@ -96,17 +28,108 @@ void ycrawler::ysci::url::Save(
 }
 
 
-std::vector<ycrawler::ysci::url::UrlId> ycrawler::ysci::url::Load(
+template <>
+std::vector<ycrawler::sci::url::UrlId> ysave_load::Load<std::vector<ycrawler::sci::url::UrlId>>(
     const std::string& file_name
 ){
-    auto data = std::vector<ycrawler::ysci::url::UrlId>{};
+    auto data = std::vector<ycrawler::sci::url::UrlId>{};
     auto&& input = std::ifstream{file_name};
     for (auto line = std::string{}; std::getline(input, line);) {
         auto&& parser = std::stringstream{line};
-        auto value = ycrawler::ysci::url::UrlId{};
+        auto value = ycrawler::sci::url::UrlId{};
         parser >> value;
         data.push_back(value);
     }
     return data;
+}
+
+
+template <>
+void ysave_load::Save<>(
+    const std::vector<ycrawler::sci::url::UrlIdWithTries>& data, const std::string& file_name
+){
+    auto&& output = std::ofstream{file_name};
+    for (const auto& value: data) {
+        output << value.id << '\t' << value.tries << '\n';
+    }
+}
+
+
+template <>
+std::vector<ycrawler::sci::url::UrlIdWithTries>
+ysave_load::Load<std::vector<ycrawler::sci::url::UrlIdWithTries>>(const std::string& file_name) {
+    auto data = std::vector<ycrawler::sci::url::UrlIdWithTries>{};
+    auto&& input = std::ifstream{file_name};
+    for (auto line = std::string{}; std::getline(input, line);) {
+        auto value = ycrawler::sci::url::UrlIdWithTries{};
+        auto&& parser = std::stringstream{line};
+
+        parser >> value.id >> value.tries;
+        data.push_back(value);
+    }
+    return data;
+}
+
+
+template <>
+void ysave_load::Save<>(
+    const std::unordered_map<std::string, ycrawler::sci::url::UrlId>& data,
+    const std::string& file_name
+){
+    auto&& output = std::ofstream{file_name};
+    for (const auto& value: data) {
+        output << value.first << '\t' << value.second << '\n';
+    }
+}
+
+
+template <>
+std::unordered_map<std::string, ycrawler::sci::url::UrlId>
+ysave_load::Load<std::unordered_map<std::string, ycrawler::sci::url::UrlId>>(
+    const std::string& file_name
+){
+    auto data = std::unordered_map<std::string, ycrawler::sci::url::UrlId>{};
+    auto&& input = std::ifstream{file_name};
+    for (auto line = std::string{}; std::getline(input, line);) {
+        auto&& parser = std::stringstream{line};
+        auto url = std::string{};
+        auto id = ycrawler::sci::url::UrlId{};
+        parser >> url >> id;
+
+        data.insert({std::move(url), id});
+    }
+    return data;
+}
+
+
+// ysave_load::{Load,Save} specializations BEGIN
+
+
+void ycrawler::sci::UrlsQueue::Load(const std::string& file_name) {
+    std::lock_guard<std::mutex> lock_guard{mutex_};
+    heap_ = ysave_load::Load<std::vector<url::UrlIdWithTries>>(file_name);
+    std::make_heap(heap_.begin(), heap_.end());
+}
+
+
+void ycrawler::sci::UrlsQueue::Save(const std::string& file_name) const {
+    std::lock_guard<std::mutex> lock_guard{mutex_};
+    ysave_load::Save(heap_, file_name);
+}
+
+
+void ycrawler::sci::UrlToId::Load(const std::string& file_name) {
+    std::lock_guard<std::mutex> lock_guard{mutex_};
+    direct_ = ysave_load::Load<std::unordered_map<std::string, url::UrlId>>(file_name);
+    reverse_.clear();
+    for (const auto& value: direct_) {
+        reverse_.insert({value.second, value.first});
+    }
+}
+
+
+void ycrawler::sci::UrlToId::Save(const std::string& file_name) const {
+    std::lock_guard<std::mutex> lock_guard{mutex_};
+    ysave_load::Save(direct_, file_name);
 }
 

@@ -5,6 +5,7 @@
 #include <library/crawler/simple_crawler_impl/vector.h>
 #include <library/download/interface.h>
 #include <library/protobuf_helpers/serialization.h>
+#include <library/save_load/save_load.h>
 
 #include <iostream>
 #include <memory>
@@ -41,7 +42,9 @@ public:
     }
 
     ~Impl() noexcept {
-        Save();
+        if (valid_) {
+            Save();
+        }
     }
 
 private:
@@ -51,55 +54,64 @@ private:
             urls_queue_.Push({url_id, 0});
         }
         config_.clear_urls_seed();
-
-        url_to_id_.SetFileName(config_.state().url_to_id_file_name());
-        urls_queue_.SetFileName(config_.state().queued_urls_file_name());
+        valid_ = true;
     }
 
     void Load() {
         const auto& dir = config_.state().directory();
-        url_to_id_.SetFileName(dir + config_.state().url_to_id_file_name());
-        urls_queue_.SetFileName(dir + config_.state().queued_urls_file_name());
-
-        url_to_id_.Load();
-        urls_queue_.Load();
-        failed_urls_.Set(ysci::url::Load(dir + config_.state().failed_urls_file_name()));
-        processed_urls_.Set(ysci::url::Load(dir + config_.state().processed_urls_file_name()));
+        url_to_id_.Load(dir + config_.state().url_to_id_file_name());
+        urls_queue_.Load(dir + config_.state().queued_urls_file_name());
+        failed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
+            dir + config_.state().failed_urls_file_name()
+        ));
+        processed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
+            dir + config_.state().processed_urls_file_name()
+        ));
+        valid_ = true;
     }
 
     void Save() noexcept {
         const auto& dir = config_.state().directory();
         try {
-            url_to_id_.Save();
+            url_to_id_.Save(dir + config_.state().url_to_id_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << "EXCEPTION" << exc.what() << std::endl;
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
 
         try {
-            urls_queue_.Save();
+            urls_queue_.Save(dir + config_.state().queued_urls_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << "EXCEPTION" << exc.what() << std::endl;
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
 
         try {
-            ysci::url::Save(failed_urls_.Get(), dir + config_.state().failed_urls_file_name());
+            ysave_load::Save(failed_urls_.Get(), dir + config_.state().failed_urls_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << "EXCEPTION" << exc.what() << std::endl;
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
 
         try {
-            ysci::url::Save(processed_urls_.Get(), dir + config_.state().processed_urls_file_name());
+            ysave_load::Save(
+                processed_urls_.Get(), dir + config_.state().processed_urls_file_name()
+            );
         } catch (const std::exception& exc) {
-            std::cerr << "EXCEPTION" << exc.what() << std::endl;
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+        }
+
+        try {
+            yproto::WriteDelimitedToFile(config_, dir + config_.state().config_file_name());
+        } catch (const std::exception& exc) {
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
     }
 
     SimpleCrawlerConfig config_;
 
-    ysci::UrlToId url_to_id_;
-    ysci::UrlsQueue urls_queue_;
-    ysci::VectorWithMutex<ysci::url::UrlId> failed_urls_;
-    ysci::VectorWithMutex<ysci::url::UrlId> processed_urls_;
+    bool valid_ = false;
+    sci::UrlToId url_to_id_;
+    sci::UrlsQueue urls_queue_;
+    sci::VectorWithMutex<sci::url::UrlId> failed_urls_;
+    sci::VectorWithMutex<sci::url::UrlId> processed_urls_;
 };
 
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <library/save_load/save_load.h>
+
 #include <algorithm>
 #include <iterator>
 #include <mutex>
@@ -13,10 +15,11 @@
 
 #include <cstdint>
 
+
 namespace ycrawler {
 
     //! ysci stands for "simple crawler implementation"
-    namespace ysci {
+    namespace sci {
 
         namespace url {
 
@@ -53,20 +56,11 @@ namespace ycrawler {
                 }
             };
 
-            void Save(const std::vector<UrlId>& data, const std::string& file_name);
-
-            std::vector<UrlId> Load(const std::string& file_name);
-
         }  // namespace url
 
 
         class UrlsQueue {
         public:
-            void SetFileName(const std::string& file_name) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
-                file_name_ = file_name;
-            }
-
             void Push(const url::UrlIdWithTries& data) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 heap_.push_back(data);
@@ -102,12 +96,11 @@ namespace ycrawler {
                 return value;
             }
 
-            void Load();
+            void Load(const std::string& file_name);
 
-            void Save() const;
+            void Save(const std::string& file_name) const;
 
         private:
-            std::string file_name_;
             std::vector<url::UrlIdWithTries> heap_;
             mutable std::mutex mutex_;
         };
@@ -115,11 +108,6 @@ namespace ycrawler {
 
         class UrlToId {
         public:
-            void SetFileName(const std::string& file_name) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
-                file_name_ = file_name;
-            }
-
             bool Has(const std::string& url) const {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 return direct_.find(url) != direct_.end();
@@ -156,19 +144,55 @@ namespace ycrawler {
                 return it->second;
             }
 
-            void Load();
+            void Load(const std::string& file_name);
 
-            void Save() const;
+            void Save(const std::string& file_name) const;
 
         private:
-            std::string file_name_;
-
             std::unordered_map<std::string, url::UrlId> direct_;
             std::unordered_map<url::UrlId, std::string> reverse_;
 
             mutable std::mutex mutex_;
         };
 
-    }  // namespace yswci
+    }  // namespace sci
 
 }  // namespace ycrawler
+
+
+namespace ysave_load {
+
+    template <>
+    void Save<>(const std::vector<ycrawler::sci::url::UrlId>& data, const std::string& file_name);
+
+
+    template <>
+    std::vector<ycrawler::sci::url::UrlId> Load<std::vector<ycrawler::sci::url::UrlId>>(
+        const std::string& file_name
+    );
+
+
+    template <>
+    void Save<>(
+        const std::vector<ycrawler::sci::url::UrlIdWithTries>& data, const std::string& file_name
+    );
+
+
+    template <>
+    std::vector<ycrawler::sci::url::UrlIdWithTries>
+    Load<std::vector<ycrawler::sci::url::UrlIdWithTries>>(const std::string& file_name);
+
+
+    template <>
+    void Save<>(
+        const std::unordered_map<std::string, ycrawler::sci::url::UrlId>& data,
+        const std::string& file_name
+    );
+
+
+    template <>
+    std::unordered_map<std::string, ycrawler::sci::url::UrlId>
+    Load<std::unordered_map<std::string, ycrawler::sci::url::UrlId>>(const std::string& file_name);
+
+}  // namespace ysave_load
+

@@ -7,7 +7,7 @@
 
 namespace ycrawler {
 
-    namespace ysci {
+    namespace sci {
 
         template <typename T>
         class VectorWithMutex {
@@ -44,7 +44,7 @@ namespace ycrawler {
             std::mutex mutex_;
         };
 
-    }  // namespace yswci
+    }  // namespace sci
 
 }  // namespace ycrawler
 
