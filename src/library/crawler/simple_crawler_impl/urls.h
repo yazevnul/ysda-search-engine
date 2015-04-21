@@ -130,7 +130,7 @@ namespace ycrawler {
             template <typename It>
             std::vector<AddResponse> Add(It begin, It end) {
                 static_assert(
-                    std::is_same<std::string, typename std::iterator_traits<It>::value_type>::value,
+                    std::is_same<std::string, typename std::remove_const<typename std::iterator_traits<It>::value_type>::type>::value,
                     "Iterator value type must be std::string"
                 );
                 std::lock_guard<std::mutex> lock_guard{mutex_};
