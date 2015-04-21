@@ -6,6 +6,14 @@ Search engine we build during practice lessons on "Information Retrieval" at Yan
 * Google Protocol Buffers 2.6+
 * CMake
 
+## Crawl [simple.wikipedia.org](http://simple.wikipedia.org)
+```bash
+cmake -DCMAKE_BUILD_TYPE=Release . && make -j
+cd src/tools/simple_crawler
+./prepare_for_crawling.sh
+./simple_crawler new --config default_config.h
+```
+
 ## Usage
 
 Build tools
