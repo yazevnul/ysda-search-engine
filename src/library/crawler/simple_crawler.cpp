@@ -204,7 +204,7 @@ void ycrawler::SimpleCrawler::Impl::StartImpl() {
                                    + std::to_string(url_with_tries.id);
         const auto response = downloader->Download(url, url_file_name);
         if (!response.Success) {
-            if (url_with_tries.tries + 1 == config_.tries_limit()) {
+            if (url_with_tries.tries == config_.tries_limit()) {
                 failed_urls_.Push(url_with_tries.id);
             } else {
                 urls_queue_.Push({url_with_tries.id, url_with_tries.tries + 1});
