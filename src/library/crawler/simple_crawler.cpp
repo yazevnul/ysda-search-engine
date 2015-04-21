@@ -4,7 +4,7 @@
 #include <library/crawler/simple_crawler_impl/graph.h>
 #include <library/crawler/simple_crawler_impl/urls.h>
 #include <library/crawler/simple_crawler_impl/vector.h>
-#include <library/download/interface.h>
+#include <library/download/wget.h>
 #include <library/graph/graph.h>
 #include <library/protobuf_helpers/serialization.h>
 #include <library/save_load/save_load.h>
@@ -26,9 +26,7 @@ public:
         Init();
     }
 
-    void Start() {
-        throw std::runtime_error{"Unimplemented"};
-    }
+    void Start();
 
     void Stop() {
         throw std::runtime_error{"Unimplemented"};
@@ -37,6 +35,7 @@ public:
     void Restore(const std::string& config_file_name) {
         yproto::ReadDelimitedFromFile(config_file_name, config_);
         Load();
+        Start();
     }
 
     void MoveFailedToQueue() {
@@ -51,9 +50,11 @@ public:
 
 private:
     void Init() {
-        for (const auto url: config_.urls_seed()) {
-            const auto url_id = url_to_id_.Add(url);
-            urls_queue_.Push({url_id, 0});
+        const auto url_statuses = url_to_id_.Add(
+            config_.urls_seed().begin(), config_.urls_seed().end()
+        );
+        for (const auto& url_status: url_statuses) {
+            urls_queue_.Push({url_status.id, 0});
         }
         config_.clear_urls_seed();
         valid_ = true;
@@ -173,3 +174,48 @@ ycrawler::SimpleCrawler::~SimpleCrawler() {
 }
 
 // ycrawler::SimpleCrawler implementation END
+
+
+static std::string ReadFile(const std::string& file_name) {
+    std::ifstream file(file_name);
+    return {std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
+}
+
+
+void ycrawler::SimpleCrawler::Impl::Start() {
+    const auto MAX_DOWNLOADED_URLS = size_t{10};
+    const auto downloader = std::make_unique<ydownload::WgetDownloader>();
+    const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
+    for (auto downloaded_urls = size_t{}; downloaded_urls < MAX_DOWNLOADED_URLS; ++downloaded_urls)
+    {
+        const auto url_with_tries = urls_queue_.Pop();
+        const auto url = url_to_id_.Get(url_with_tries.id);
+        const auto url_file_name = config_.documents().documents_directory()
+                                   + '/' + std::to_string(url_with_tries.id);
+        const auto response = downloader->Download(url, url_file_name);
+        if (!response.Success) {
+            if (url_with_tries.tries + 1 == config_.tries_limit()) {
+                failed_urls_.Push(url_with_tries.id);
+            } else {
+                urls_queue_.Push({url_with_tries.id, url_with_tries.tries + 1});
+            }
+            continue;
+        }
+
+        const auto url_content = ReadFile(url_file_name);
+        const auto links = link_extractor->Extract(url_content);
+        const auto link_statuses = url_to_id_.Add(links.begin(), links.end());
+        for (const auto& link_status: link_statuses) {
+            if (!link_status.known) {
+                urls_queue_.Push({link_status.id, 0});
+            }
+        }
+
+        auto out_url_ids = std::vector<sci::url::UrlId>(link_statuses.size());
+        for (auto index = size_t{}; index < link_statuses.size(); ++index) {
+            out_url_ids[index] = link_statuses[index].id;
+        }
+        web_graph_.Add(url_with_tries.id, std::move(out_url_ids));
+        processed_urls_.Push(url_with_tries.id);
+    }
+}

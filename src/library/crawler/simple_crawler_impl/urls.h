@@ -7,7 +7,6 @@
 #include <mutex>
 #include <stdexcept>
 #include <string>
-#include <tuple>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
@@ -118,12 +117,34 @@ namespace ycrawler {
                 return reverse_.find(id) != reverse_.cend();
             }
 
-            auto Add(const std::string& url) {
+            struct AddResponse {
+                bool known = false;
+                url::UrlId id = {};
+            };
+
+            template <typename It>
+            std::vector<AddResponse> Add(It begin, It end) {
+                static_assert(std::is_same<typename std::iterator_traits<It>::value_type,
+                                           std::string>::value,
+                              "Iterator value type must be std::string"
+                );
                 std::lock_guard<std::mutex> lock_guard{mutex_};
-                const auto id = static_cast<url::UrlId>(direct_.size() + 1);
-                direct_.insert({url, id});
-                reverse_.insert({id, url});
-                return id;
+                std::vector<AddResponse> result;
+                for (auto it = begin; it != end; ++it) {
+                    const auto& url = *begin;
+                    auto response = AddResponse{};
+                    auto jit = direct_.find(url);
+                    response.known = (jit != direct_.end());
+                    if (response.known) {
+                        response.id = jit->second;
+                    } else {
+                        const auto id = static_cast<url::UrlId>(direct_.size() + 1);
+                        direct_.insert({url, id});
+                        reverse_.insert({id, url});
+                    }
+                    result.push_back(response);
+                }
+                return std::move(result);
             }
 
             url::UrlId Get(const std::string& url) const {
@@ -149,6 +170,7 @@ namespace ycrawler {
             void Save(const std::string& file_name) const;
 
         private:
+            // this place worth optimization (store one copy of a string instead of two)
             std::unordered_map<std::string, url::UrlId> direct_;
             std::unordered_map<url::UrlId, std::string> reverse_;
 

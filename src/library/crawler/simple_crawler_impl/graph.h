@@ -2,7 +2,9 @@
 
 #include <library/graph/graph.h>
 
+#include <algorithm>  // std::max
 #include <mutex>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -13,15 +15,24 @@ namespace ycrawler {
 
         template <typename T>
         class SparceGraphWithMutex {
+            static_assert(std::is_integral<T>::value, "type must be integral");
         public:
             SparceGraphWithMutex() = default;
 
             void Add(const T vertice, std::vector<T>&& to) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
-                graph_.insert({vertice, std::forward<>(to)});
+                if (to.empty()) {
+                    ++graph_.sink_vertices_count;
+                }
+                graph_.edges_count += to.size();
+                graph_.vertices_count = std::max(
+                    graph_.vertices_count, static_cast<std::uint32_t>(vertice)
+                );
+                graph_.adjacency_list.insert({vertice, std::forward<std::vector<T>>(to)});
             }
 
             ygraph::SparceGraph<T>&& Get() {
+                ++graph_.vertices_count;
                 return std::move(graph_);
             }
 
