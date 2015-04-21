@@ -193,7 +193,7 @@ static std::string ReadFile(const std::string& file_name) {
 
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
-    const auto MAX_DOWNLOADED_URLS = size_t{10};
+    const auto MAX_DOWNLOADED_URLS = size_t{100};
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
     for (auto downloaded_urls = size_t{}; downloaded_urls < MAX_DOWNLOADED_URLS; ++downloaded_urls)
