@@ -13,6 +13,7 @@ message SimpleCrawlerConfig {
     message Documents {
         optional string documents_directory       = 1 [default = "docs"];
         optional string documents_data_directory  = 2 [default = "docs_data"];
+        optional string web_graph_file_name       = 3 [default = "web_graph.txt"];
     };
 
     optional uint32 threads                        = 1 [default = 4];

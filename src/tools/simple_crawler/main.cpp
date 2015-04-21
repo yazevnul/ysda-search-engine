@@ -77,6 +77,8 @@ auto ParseConfig(const std::string& file_name) {
                     config.mutable_documents()->set_documents_directory(ikv.second.string_value());
                 } else if ("documents_data_directory" == ikv.first) {
                     config.mutable_documents()->set_documents_data_directory(ikv.second.string_value());
+                } else if ("web_graph_file_name" == ikv.first) {
+                    config.mutable_documents()->set_web_graph_file_name(ikv.second.string_value());
                 }
             }
         }

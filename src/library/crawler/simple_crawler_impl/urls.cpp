@@ -28,8 +28,8 @@ void ysave_load::Save<>(
 }
 
 
-template <>
-std::vector<ycrawler::sci::url::UrlId> ysave_load::Load<std::vector<ycrawler::sci::url::UrlId>>(
+std::vector<ycrawler::sci::url::UrlId>
+ysave_load::detail::LoadImpl<std::vector<ycrawler::sci::url::UrlId>>::Do(
     const std::string& file_name
 ){
     auto data = std::vector<ycrawler::sci::url::UrlId>{};
@@ -55,9 +55,10 @@ void ysave_load::Save<>(
 }
 
 
-template <>
 std::vector<ycrawler::sci::url::UrlIdWithTries>
-ysave_load::Load<std::vector<ycrawler::sci::url::UrlIdWithTries>>(const std::string& file_name) {
+ysave_load::detail::LoadImpl<std::vector<ycrawler::sci::url::UrlIdWithTries>>::Do(
+    const std::string& file_name
+){
     auto data = std::vector<ycrawler::sci::url::UrlIdWithTries>{};
     auto&& input = std::ifstream{file_name};
     for (auto line = std::string{}; std::getline(input, line);) {
@@ -83,9 +84,8 @@ void ysave_load::Save<>(
 }
 
 
-template <>
 std::unordered_map<std::string, ycrawler::sci::url::UrlId>
-ysave_load::Load<std::unordered_map<std::string, ycrawler::sci::url::UrlId>>(
+ysave_load::detail::LoadImpl<std::unordered_map<std::string, ycrawler::sci::url::UrlId>>::Do(
     const std::string& file_name
 ){
     auto data = std::unordered_map<std::string, ycrawler::sci::url::UrlId>{};

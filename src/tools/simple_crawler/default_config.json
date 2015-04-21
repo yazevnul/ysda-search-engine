@@ -14,7 +14,8 @@
     },
     "documents": {
         "documents_directory": "docs",
-        "documents_data_directory": "docs_data"
+        "documents_data_directory": "docs_data",
+        "web_graph_file_name": "web_graph.txt"
     }
 }
 

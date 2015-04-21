@@ -36,7 +36,7 @@ namespace ycrawler {
             }
 
             void Set(std::vector<T>&& data) {
-                data = std::move(data);
+                data = data;
             }
 
         private:

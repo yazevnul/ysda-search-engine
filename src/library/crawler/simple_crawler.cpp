@@ -1,9 +1,11 @@
 #include "simple_crawler.h"
 #include "url_extractor.h"
 
+#include <library/crawler/simple_crawler_impl/graph.h>
 #include <library/crawler/simple_crawler_impl/urls.h>
 #include <library/crawler/simple_crawler_impl/vector.h>
 #include <library/download/interface.h>
+#include <library/graph/graph.h>
 #include <library/protobuf_helpers/serialization.h>
 #include <library/save_load/save_load.h>
 
@@ -67,6 +69,10 @@ private:
         processed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
             dir + config_.state().processed_urls_file_name()
         ));
+        web_graph_.Set(ysave_load::Load<ygraph::SparceGraph<sci::url::UrlId>>(
+            config_.documents().documents_data_directory()
+            + config_.documents().web_graph_file_name()
+        ));
         valid_ = true;
     }
 
@@ -99,6 +105,17 @@ private:
         }
 
         try {
+            ysave_load::Save(
+                web_graph_.Get(),
+                config_.documents().documents_data_directory()
+                + config_.documents().web_graph_file_name()
+            );
+        } catch (const std::exception& exc) {
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+        }
+
+        // We write config as the last one
+        try {
             yproto::WriteDelimitedToFile(config_, dir + config_.state().config_file_name());
         } catch (const std::exception& exc) {
             std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
@@ -108,10 +125,13 @@ private:
     SimpleCrawlerConfig config_;
 
     bool valid_ = false;
+
     sci::UrlToId url_to_id_;
     sci::UrlsQueue urls_queue_;
     sci::VectorWithMutex<sci::url::UrlId> failed_urls_;
     sci::VectorWithMutex<sci::url::UrlId> processed_urls_;
+
+    sci::SparceGraphWithMutex<sci::url::UrlId> web_graph_;
 };
 
 

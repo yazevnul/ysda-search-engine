@@ -166,10 +166,12 @@ namespace ysave_load {
     void Save<>(const std::vector<ycrawler::sci::url::UrlId>& data, const std::string& file_name);
 
 
-    template <>
-    std::vector<ycrawler::sci::url::UrlId> Load<std::vector<ycrawler::sci::url::UrlId>>(
-        const std::string& file_name
-    );
+    namespace detail {
+        template <>
+        struct LoadImpl<std::vector<ycrawler::sci::url::UrlId>> {
+            static std::vector<ycrawler::sci::url::UrlId> Do(const std::string& file_name);
+        };
+    }  // namespace detail
 
 
     template <>
@@ -178,9 +180,12 @@ namespace ysave_load {
     );
 
 
-    template <>
-    std::vector<ycrawler::sci::url::UrlIdWithTries>
-    Load<std::vector<ycrawler::sci::url::UrlIdWithTries>>(const std::string& file_name);
+    namespace detail {
+        template <>
+        struct LoadImpl<std::vector<ycrawler::sci::url::UrlIdWithTries>> {
+            static std::vector<ycrawler::sci::url::UrlIdWithTries> Do(const std::string& file_name);
+        };
+    }  // namespace detail
 
 
     template <>
@@ -190,9 +195,14 @@ namespace ysave_load {
     );
 
 
-    template <>
-    std::unordered_map<std::string, ycrawler::sci::url::UrlId>
-    Load<std::unordered_map<std::string, ycrawler::sci::url::UrlId>>(const std::string& file_name);
+    namespace detail {
+        template <>
+        struct LoadImpl<std::unordered_map<std::string, ycrawler::sci::url::UrlId>> {
+            static std::unordered_map<std::string, ycrawler::sci::url::UrlId> Do(
+                const std::string& file_name
+            );
+        };
+    }  // namespace detail
 
 }  // namespace ysave_load
 
