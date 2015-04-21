@@ -5,7 +5,7 @@
     ],
     "tries_limit": 10,
     "state": {
-        "directory": "simple_crawler_state",
+        "directory": "simple_crawler_state/",
         "url_to_id_file_name": "url_to_id.tsv",
         "queued_urls_file_name": "queued_urls.tsv",
         "failed_urls_file_name": "failed_urls.tsv",
@@ -13,8 +13,8 @@
         "config_file_name": "config.pb.bin"
     },
     "documents": {
-        "documents_directory": "docs",
-        "documents_data_directory": "docs_data",
+        "documents_directory": "docs/",
+        "documents_data_directory": "docs_data/",
         "web_graph_file_name": "web_graph.txt"
     }
 }

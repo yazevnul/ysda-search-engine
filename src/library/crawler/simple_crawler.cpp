@@ -26,7 +26,12 @@ public:
         Init();
     }
 
-    void Start();
+    void Start() {
+        should_save_ = true;
+        StartImpl();
+        Save();
+        should_save_ = false;
+    }
 
     void Stop() {
         throw std::runtime_error{"Unimplemented"};
@@ -43,12 +48,16 @@ public:
     }
 
     ~Impl() noexcept {
-        if (valid_) {
-            Save();
+        if (should_save_) {
+            if (valid_) {
+                Save();
+            }
         }
     }
 
 private:
+    void StartImpl();
+
     void Init() {
         const auto url_statuses = url_to_id_.Add(
             config_.urls_seed().begin(), config_.urls_seed().end()
@@ -125,6 +134,7 @@ private:
 
     SimpleCrawlerConfig config_;
 
+    bool should_save_ = false;
     bool valid_ = false;
 
     sci::UrlToId url_to_id_;
@@ -182,7 +192,7 @@ static std::string ReadFile(const std::string& file_name) {
 }
 
 
-void ycrawler::SimpleCrawler::Impl::Start() {
+void ycrawler::SimpleCrawler::Impl::StartImpl() {
     const auto MAX_DOWNLOADED_URLS = size_t{10};
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
@@ -191,7 +201,7 @@ void ycrawler::SimpleCrawler::Impl::Start() {
         const auto url_with_tries = urls_queue_.Pop();
         const auto url = url_to_id_.Get(url_with_tries.id);
         const auto url_file_name = config_.documents().documents_directory()
-                                   + '/' + std::to_string(url_with_tries.id);
+                                   + std::to_string(url_with_tries.id);
         const auto response = downloader->Download(url, url_file_name);
         if (!response.Success) {
             if (url_with_tries.tries + 1 == config_.tries_limit()) {

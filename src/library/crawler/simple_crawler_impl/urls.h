@@ -45,9 +45,9 @@ namespace ycrawler {
                         return false;
                     } else if (tries > other.tries) {
                         return true;
-                    } else if (id < other.id) {
-                        return true;
                     } else if (id > other.id) {
+                        return true;
+                    } else if (id < other.id) {
                         return false;
                     } else {
                         return false;
@@ -68,7 +68,10 @@ namespace ycrawler {
 
             template <typename It>
             void PushMany(It begin ,It end) {
-                static_assert(std::is_same<url::UrlId, typename std::iterator_traits<It>::value_type>::value, "Wrong type");
+                static_assert(
+                    std::is_same<url::UrlId, typename std::iterator_traits<It>::value_type>::value,
+                    "Wrong type"
+                );
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 for (; begin != end; ++begin) {
                     heap_.push_back({*begin, 0});
@@ -78,7 +81,9 @@ namespace ycrawler {
 
             template <typename T>
             void PushMany(const T& data) {
-                static_assert(std::is_same<url::UrlId, typename T::value_type>::value, "Wrong type");
+                static_assert(
+                    std::is_same<url::UrlId, typename T::value_type>::value, "Wrong type"
+                );
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 for (const auto& value: data) {
                     heap_.push_back({value, 0});
@@ -131,7 +136,7 @@ namespace ycrawler {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 std::vector<AddResponse> result;
                 for (auto it = begin; it != end; ++it) {
-                    const auto& url = *begin;
+                    const auto& url = *it;
                     auto response = AddResponse{};
                     auto jit = direct_.find(url);
                     response.known = (jit != direct_.end());
@@ -141,6 +146,7 @@ namespace ycrawler {
                         const auto id = static_cast<url::UrlId>(direct_.size() + 1);
                         direct_.insert({url, id});
                         reverse_.insert({id, url});
+                        response.id = id;
                     }
                     result.push_back(response);
                 }
