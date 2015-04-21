@@ -40,7 +40,6 @@ public:
     void Restore(const std::string& config_file_name) {
         yproto::ReadDelimitedFromFile(config_file_name, config_);
         Load();
-        Start();
     }
 
     void MoveFailedToQueue() {
@@ -84,6 +83,7 @@ private:
             + config_.documents().web_graph_file_name()
         ));
         valid_ = true;
+        should_save_ = true;
     }
 
     void Save() noexcept {
