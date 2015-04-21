@@ -2,7 +2,7 @@
 
 #include <library/graph/graph.h>
 
-#include <algorithm>  // std::max
+#include <algorithm>
 #include <mutex>
 #include <type_traits>
 #include <utility>
@@ -25,9 +25,16 @@ namespace ycrawler {
                     ++graph_.sink_vertices_count;
                 }
                 graph_.edges_count += to.size();
-                graph_.vertices_count = std::max(
-                    graph_.vertices_count, static_cast<std::uint32_t>(vertice)
-                );
+                if (to.empty()) {
+                    graph_.vertices_count = std::max(
+                        graph_.vertices_count, static_cast<std::uint32_t>(vertice)
+                    );
+                } else {
+                    graph_.vertices_count = std::max({
+                        graph_.vertices_count, static_cast<std::uint32_t>(vertice),
+                        static_cast<std::uint32_t>(*std::max_element(to.begin(), to.end()))
+                    });
+                }
                 graph_.adjacency_list.insert({vertice, std::forward<std::vector<T>>(to)});
             }
 
