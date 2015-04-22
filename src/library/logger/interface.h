@@ -46,3 +46,10 @@ namespace ylogger {
     logger_ptr->Critical(LIBRARY_LOGGER_PREFIX + message);
 
 #undef LIBRARY_LOGGER_PREFIX
+
+#ifdef NDEBUG
+#define LOG_IF_DEBUG(logger_ptr, message) \
+    LOG_DEBUG(logger_ptr, message)
+#else
+#define LOG_IF_DEBUG(logger_ptr, message)
+#endif
