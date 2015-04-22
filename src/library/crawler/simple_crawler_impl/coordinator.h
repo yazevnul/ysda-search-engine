@@ -28,29 +28,43 @@ namespace ycrawler {
 
         private:
             void Coordinate(Condition stop_condition) {
-                std::unique_lock<std::mutex> lock{add_job_mutex_};
-                for(; !stop_condition && jobs_running_count_ > 0;) {
-                    for (; jobs_limit_ && jobs_running_count_;) {
-                        ++jobs_running_count_;
-                        thread_pool_->enqueue([this] { this->Do(); });
+                std::unique_lock<std::mutex> add_job_cv_lock{add_job_cv_mutex_};
+                for(;;) {
+                    {
+                        std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                        for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
+                            thread_pool_->enqueue([this] { this->Do(); });
+                        }
                     }
-                    add_job_.wait(lock);
+                    add_job_cv_.wait(add_job_cv_lock);
+                    {
+                        std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                        if (stop_condition && 0 == jobs_running_count_) {
+                            break;
+                        }
+                    }
                 }
             }
 
             void Do() {
                 worker_();
-                --jobs_running_count_;
-                add_job_.notify_one();
+                {
+                    std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                    --jobs_running_count_;
+                }
+                add_job_cv_.notify_one();
             }
 
             Worker worker_;
 
             std::unique_ptr<ThreadPool> thread_pool_;
-            std::uint32_t jobs_limit_;
-            std::atomic<std::uint32_t> jobs_running_count_;
-            std::condition_variable add_job_;
+            std::uint32_t jobs_limit_ = {};
+            std::uint32_t jobs_running_count_ = {};
+
             std::mutex add_job_mutex_;
+
+            std::condition_variable add_job_cv_;
+            std::mutex add_job_cv_mutex_;
         };
 
     }  // namespace sci
