@@ -1,6 +1,7 @@
 #include "simple_crawler.h"
 #include "url_extractor.h"
 
+#include <library/crawler/simple_crawler_impl/coordinator.h>
 #include <library/crawler/simple_crawler_impl/graph.h>
 #include <library/crawler/simple_crawler_impl/queue.h>
 #include <library/crawler/simple_crawler_impl/url_to_id.h>
@@ -238,10 +239,11 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
 
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
-    const auto MAX_DOWNLOADED_URLS = size_t{10};
-    for (auto downloaded_urls = size_t{}; downloaded_urls < MAX_DOWNLOADED_URLS; ++downloaded_urls)
-    {
-        ProcessUrl();
-    }
+    sci::Coordnator coordinator;
+    coordinator.Run(
+        [this](){ this->ProcessUrl(); },
+        config_.threads(),
+        [this](){ return this->urls_queue_.Empty(); }
+    );
 }
 
