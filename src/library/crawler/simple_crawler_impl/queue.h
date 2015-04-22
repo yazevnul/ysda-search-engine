@@ -71,6 +71,11 @@ namespace ycrawler {
                 return heap_.empty();
             }
 
+            auto Size() const {
+                std::lock_guard<std::mutex> lock_guard{mutex_};
+                return heap_.size();
+            }
+
             void Load(const std::string& file_name);
 
             void Save(const std::string& file_name) const;
