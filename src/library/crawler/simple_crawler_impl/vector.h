@@ -33,7 +33,7 @@ namespace ycrawler {
             }
 
             void Set(std::vector<T>&& data) {
-                data = data;
+                data = std::forward<std::vector<T>>(data);
             }
 
         private:
