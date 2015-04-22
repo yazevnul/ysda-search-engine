@@ -31,6 +31,11 @@ namespace ycrawler {
                 data_.push_back(std::forward<T>(value));
             }
 
+            auto Size() const {
+                std::lock_guard<std::mutex> lock_guard{mutex_};
+                return data_.size();
+            }
+
             std::vector<T>&& Get() {
                 return std::move(data_);
             }
