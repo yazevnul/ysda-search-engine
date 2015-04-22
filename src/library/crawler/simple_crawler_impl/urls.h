@@ -122,22 +122,22 @@ namespace ycrawler {
                 return reverse_.find(id) != reverse_.cend();
             }
 
-            struct AddResponse {
+            struct Response {
                 bool known = false;
                 url::UrlId id = {};
             };
 
             template <typename It>
-            std::vector<AddResponse> Add(It begin, It end) {
+            std::vector<Response> Add(It begin, It end) {
                 static_assert(
                     std::is_same<std::string, typename std::remove_const<typename std::iterator_traits<It>::value_type>::type>::value,
                     "Iterator value type must be std::string"
                 );
                 std::lock_guard<std::mutex> lock_guard{mutex_};
-                std::vector<AddResponse> result;
+                std::vector<Response> result;
                 for (auto it = begin; it != end; ++it) {
                     const auto& url = *it;
-                    auto response = AddResponse{};
+                    auto response = Response{};
                     auto jit = direct_.find(url);
                     response.known = (jit != direct_.end());
                     if (response.known) {
