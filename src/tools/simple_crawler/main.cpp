@@ -56,8 +56,6 @@ auto ParseConfig(const std::string& file_name) {
             for (const auto& ikv: kv.second.object_items()) {
                 if ("directory" == ikv.first) {
                     config.mutable_state()->set_directory(ikv.second.string_value());
-                } else if ("url_to_id_file_name" == ikv.first) {
-                    config.mutable_state()->set_url_to_id_file_name(ikv.second.string_value());
                 } else if ("queued_urls_file_name" == ikv.first) {
                     config.mutable_state()->set_queued_urls_file_name(ikv.second.string_value());
                 } else if ("failed_urls_file_name" == ikv.first) {
@@ -77,6 +75,8 @@ auto ParseConfig(const std::string& file_name) {
                     config.mutable_documents()->set_documents_directory(ikv.second.string_value());
                 } else if ("documents_data_directory" == ikv.first) {
                     config.mutable_documents()->set_documents_data_directory(ikv.second.string_value());
+                } else if ("url_to_id_file_name" == ikv.first) {
+                    config.mutable_documents()->set_url_to_id_file_name(ikv.second.string_value());
                 } else if ("web_graph_file_name" == ikv.first) {
                     config.mutable_documents()->set_web_graph_file_name(ikv.second.string_value());
                 }

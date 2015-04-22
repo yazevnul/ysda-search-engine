@@ -74,47 +74,50 @@ private:
     }
 
     void Load() {
-        const auto& dir = config_.state().directory();
-        url_to_id_.Load(dir + config_.state().url_to_id_file_name());
-        urls_queue_.Load(dir + config_.state().queued_urls_file_name());
+        const auto& state_dir = config_.state().directory();
+        urls_queue_.Load(state_dir + config_.state().queued_urls_file_name());
         failed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
-            dir + config_.state().failed_urls_file_name()
+            state_dir + config_.state().failed_urls_file_name()
         ));
         processed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
-            dir + config_.state().processed_urls_file_name()
+            state_dir + config_.state().processed_urls_file_name()
         ));
+        const auto& doc_data_dir = config_.documents().url_to_id_file_name();
+        url_to_id_.Load(doc_data_dir + config_.documents().url_to_id_file_name());
         web_graph_.Set(ysave_load::Load<ygraph::SparceGraph<sci::url::UrlId>>(
-            config_.documents().documents_data_directory()
-            + config_.documents().web_graph_file_name()
+            doc_data_dir + config_.documents().web_graph_file_name()
         ));
         valid_ = true;
         should_save_ = true;
     }
 
     void Save() noexcept {
-        const auto& dir = config_.state().directory();
+        const auto& state_dir = config_.state().directory();
         try {
-            url_to_id_.Save(dir + config_.state().url_to_id_file_name());
-        } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
-        }
-
-        try {
-            urls_queue_.Save(dir + config_.state().queued_urls_file_name());
-        } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
-        }
-
-        try {
-            ysave_load::Save(failed_urls_.Get(), dir + config_.state().failed_urls_file_name());
+            urls_queue_.Save(state_dir + config_.state().queued_urls_file_name());
         } catch (const std::exception& exc) {
             std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
 
         try {
             ysave_load::Save(
-                processed_urls_.Get(), dir + config_.state().processed_urls_file_name()
+                failed_urls_.Get(), state_dir + config_.state().failed_urls_file_name()
             );
+        } catch (const std::exception& exc) {
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+        }
+
+        try {
+            ysave_load::Save(
+                processed_urls_.Get(), state_dir + config_.state().processed_urls_file_name()
+            );
+        } catch (const std::exception& exc) {
+            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+        }
+
+        const auto& doc_data_dir = config_.documents().documents_data_directory();
+        try {
+            url_to_id_.Save(doc_data_dir + config_.documents().url_to_id_file_name());
         } catch (const std::exception& exc) {
             std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }
@@ -122,8 +125,7 @@ private:
         try {
             ysave_load::Save(
                 web_graph_.Get(),
-                config_.documents().documents_data_directory()
-                + config_.documents().web_graph_file_name()
+                doc_data_dir + config_.documents().web_graph_file_name()
             );
         } catch (const std::exception& exc) {
             std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
@@ -131,7 +133,7 @@ private:
 
         // We write config as the last one
         try {
-            yproto::WriteDelimitedToFile(config_, dir + config_.state().config_file_name());
+            yproto::WriteDelimitedToFile(config_, state_dir + config_.state().config_file_name());
         } catch (const std::exception& exc) {
             std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
         }

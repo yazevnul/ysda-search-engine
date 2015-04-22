@@ -6,7 +6,6 @@
     "tries_limit": 10,
     "state": {
         "directory": "simple_crawler_state/",
-        "url_to_id_file_name": "url_to_id.tsv",
         "queued_urls_file_name": "queued_urls.tsv",
         "failed_urls_file_name": "failed_urls.tsv",
         "processed_urls_file_name": "processed_urls.tsv",
@@ -15,6 +14,7 @@
     "documents": {
         "documents_directory": "docs/",
         "documents_data_directory": "docs_data/",
+        "url_to_id_file_name": "url_to_id.tsv",
         "web_graph_file_name": "web_graph.txt"
     }
 }
