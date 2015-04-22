@@ -51,8 +51,8 @@ namespace ycrawler {
                 {
                     std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
                     --jobs_running_count_;
+                    add_job_cv_.notify_one();
                 }
-                add_job_cv_.notify_one();
             }
 
             Worker worker_;
