@@ -91,13 +91,22 @@ namespace ycrawler {
                 }
             }
 
-            url::UrlIdWithTries Pop() {
+            struct Response {
+                bool empty = true;
+                url::UrlIdWithTries url_with_tries = {};
+            };
+
+            Response Pop() {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
+
+                if (heap_.empty()) {
+                    return {};
+                }
 
                 std::pop_heap(heap_.begin(), heap_.end());
                 const auto value = heap_.back();
                 heap_.pop_back();
-                return value;
+                return { false, value };
             }
 
             void Load(const std::string& file_name);

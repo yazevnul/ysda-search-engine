@@ -198,18 +198,22 @@ static std::string ReadFile(const std::string& file_name) {
 void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
-    const auto url_with_tries = urls_queue_.Pop();
-    const auto url = url_to_id_.Get(url_with_tries.id);
+    const auto queue_response = urls_queue_.Pop();
+    if (queue_response.empty) {
+        return;
+    }
+    const auto url = url_to_id_.Get(queue_response.url_with_tries.id);
     const auto url_file_name = config_.documents().documents_directory()
-                                + std::to_string(url_with_tries.id);
+                                + std::to_string(queue_response.url_with_tries.id);
     const auto response = downloader->Download(url, url_file_name);
     if (!response.Success) {
-        if (url_with_tries.tries == config_.tries_limit()) {
-            failed_urls_.Push(url_with_tries.id);
+        if (queue_response.url_with_tries.tries == config_.tries_limit()) {
+            failed_urls_.Push(queue_response.url_with_tries.id);
         } else {
-            urls_queue_.Push({url_with_tries.id, url_with_tries.tries + 1});
+            urls_queue_.Push({
+                queue_response.url_with_tries.id, queue_response.url_with_tries.tries + 1
+            });
         }
-        // Add job to thread pool
         return;
     }
 
@@ -226,16 +230,16 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
     for (auto index = size_t{}; index < link_statuses.size(); ++index) {
         out_url_ids[index] = link_statuses[index].id;
     }
-    web_graph_.Add(url_with_tries.id, std::move(out_url_ids));
-    processed_urls_.Push(url_with_tries.id);
-    // Add job to thread pool
+    web_graph_.Add(queue_response.url_with_tries.id, std::move(out_url_ids));
+    processed_urls_.Push(queue_response.url_with_tries.id);
 }
 
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
-    const auto MAX_DOWNLOADED_URLS = size_t{100};
+    const auto MAX_DOWNLOADED_URLS = size_t{10};
     for (auto downloaded_urls = size_t{}; downloaded_urls < MAX_DOWNLOADED_URLS; ++downloaded_urls)
     {
         ProcessUrl();
     }
 }
+
