@@ -149,6 +149,8 @@ private:
     sci::VectorWithMutex<sci::url::UrlId> processed_urls_;
 
     sci::SparceGraphWithMutex<sci::url::UrlId> web_graph_;
+
+    sci::Coordnator coordinator_;
 };
 
 
@@ -239,8 +241,7 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
 
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
-    sci::Coordnator coordinator;
-    coordinator.Run(
+    coordinator_.Run(
         [this](){ this->ProcessUrl(); },
         config_.threads(),
         [this](){ return this->urls_queue_.Empty(); }
