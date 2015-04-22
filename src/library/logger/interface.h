@@ -34,16 +34,16 @@ namespace ylogger {
     std::string{__FILE__} + ':' + __LINE__ + '\t'
 
 #define LOG_INFO(logger_ptr, message)                   \
-    logger_ptr->Info(LIBRARY_LOGGER_PREFIX + message);
+    logger_ptr->Info(LIBRARY_LOGGER_PREFIX + message)
 
 #define LOG_DEBUG(logger_ptr, message)                   \
-    logger_ptr->Debug(LIBRARY_LOGGER_PREFIX + message);
+    logger_ptr->Debug(LIBRARY_LOGGER_PREFIX + message)
 
 #define LOG_ERROR(logger_ptr, message)                   \
-    logger_ptr->Error(LIBRARY_LOGGER_PREFIX + message);
+    logger_ptr->Error(LIBRARY_LOGGER_PREFIX + message)
 
 #define LOG_CRITICAL(logger_ptr, message)                   \
-    logger_ptr->Critical(LIBRARY_LOGGER_PREFIX + message);
+    logger_ptr->Critical(LIBRARY_LOGGER_PREFIX + message)
 
 #undef LIBRARY_LOGGER_PREFIX
 
