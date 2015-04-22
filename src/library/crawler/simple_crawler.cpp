@@ -55,6 +55,8 @@ public:
     }
 
 private:
+    void ProcessUrl();
+
     void StartImpl();
 
     void Init() {
@@ -132,6 +134,7 @@ private:
         }
     }
 
+
     SimpleCrawlerConfig config_;
 
     bool should_save_ = false;
@@ -192,40 +195,47 @@ static std::string ReadFile(const std::string& file_name) {
 }
 
 
-void ycrawler::SimpleCrawler::Impl::StartImpl() {
-    const auto MAX_DOWNLOADED_URLS = size_t{100};
+void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
+    const auto url_with_tries = urls_queue_.Pop();
+    const auto url = url_to_id_.Get(url_with_tries.id);
+    const auto url_file_name = config_.documents().documents_directory()
+                                + std::to_string(url_with_tries.id);
+    const auto response = downloader->Download(url, url_file_name);
+    if (!response.Success) {
+        if (url_with_tries.tries == config_.tries_limit()) {
+            failed_urls_.Push(url_with_tries.id);
+        } else {
+            urls_queue_.Push({url_with_tries.id, url_with_tries.tries + 1});
+        }
+        // Add job to thread pool
+        return;
+    }
+
+    const auto url_content = ReadFile(url_file_name);
+    const auto links = link_extractor->Extract(url_content);
+    const auto link_statuses = url_to_id_.Add(links.begin(), links.end());
+    for (const auto& link_status: link_statuses) {
+        if (!link_status.known) {
+            urls_queue_.Push({link_status.id, 0});
+        }
+    }
+
+    auto out_url_ids = std::vector<sci::url::UrlId>(link_statuses.size());
+    for (auto index = size_t{}; index < link_statuses.size(); ++index) {
+        out_url_ids[index] = link_statuses[index].id;
+    }
+    web_graph_.Add(url_with_tries.id, std::move(out_url_ids));
+    processed_urls_.Push(url_with_tries.id);
+    // Add job to thread pool
+}
+
+
+void ycrawler::SimpleCrawler::Impl::StartImpl() {
+    const auto MAX_DOWNLOADED_URLS = size_t{100};
     for (auto downloaded_urls = size_t{}; downloaded_urls < MAX_DOWNLOADED_URLS; ++downloaded_urls)
     {
-        const auto url_with_tries = urls_queue_.Pop();
-        const auto url = url_to_id_.Get(url_with_tries.id);
-        const auto url_file_name = config_.documents().documents_directory()
-                                   + std::to_string(url_with_tries.id);
-        const auto response = downloader->Download(url, url_file_name);
-        if (!response.Success) {
-            if (url_with_tries.tries == config_.tries_limit()) {
-                failed_urls_.Push(url_with_tries.id);
-            } else {
-                urls_queue_.Push({url_with_tries.id, url_with_tries.tries + 1});
-            }
-            continue;
-        }
-
-        const auto url_content = ReadFile(url_file_name);
-        const auto links = link_extractor->Extract(url_content);
-        const auto link_statuses = url_to_id_.Add(links.begin(), links.end());
-        for (const auto& link_status: link_statuses) {
-            if (!link_status.known) {
-                urls_queue_.Push({link_status.id, 0});
-            }
-        }
-
-        auto out_url_ids = std::vector<sci::url::UrlId>(link_statuses.size());
-        for (auto index = size_t{}; index < link_statuses.size(); ++index) {
-            out_url_ids[index] = link_statuses[index].id;
-        }
-        web_graph_.Add(url_with_tries.id, std::move(out_url_ids));
-        processed_urls_.Push(url_with_tries.id);
+        ProcessUrl();
     }
 }
