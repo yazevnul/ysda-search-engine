@@ -1,9 +1,12 @@
 #include "logger.h"
 
+#include <chrono>
+#include <ctime>
+#include <iomanip>
+#include <iostream>
 #include <mutex>
 #include <ostream>
 #include <string>
-#include <iostream>
 
 
 std::shared_ptr<ylogger::ILogger>& ylogger::GetClog() {
@@ -20,7 +23,14 @@ static constexpr char PREFIX_ERROR[] = "ERROR: ";
 static constexpr char PREFIX_CRITICAL[] = "CRITICAL: ";
 
 
+static void WriteTime(std::ostream& output) {
+    const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    output << std::put_time(std::gmtime(&now), "%F %T") << '\t';
+}
+
+
 static void WriteInfo(const std::string& message, const bool flush, std::ostream& output) {
+    WriteTime(output);
     output << PREFIX_INFO << message << '\n';
     if (flush) {
         output.flush();
@@ -29,6 +39,7 @@ static void WriteInfo(const std::string& message, const bool flush, std::ostream
 
 
 static void WriteDebug(const std::string& message, const bool flush, std::ostream& output) {
+    WriteTime(output);
     output << PREFIX_DEBUG << message << '\n';
     if (flush) {
         output.flush();
@@ -37,6 +48,7 @@ static void WriteDebug(const std::string& message, const bool flush, std::ostrea
 
 
 static void WriteError(const std::string& message, const bool flush, std::ostream& output) {
+    WriteTime(output);
     output << PREFIX_ERROR << message << '\n';
     if (flush) {
         output.flush();
@@ -45,6 +57,7 @@ static void WriteError(const std::string& message, const bool flush, std::ostrea
 
 
 static void WriteCritical(const std::string& message, const bool flush, std::ostream& output) {
+    WriteTime(output);
     output << PREFIX_CRITICAL << message << '\n';
     if (flush) {
         output.flush();
@@ -94,16 +107,16 @@ void ylogger::Logger::Write(const std::string& message, const Level level) {
         return;
     }
     switch (level) {
-        case INFO: {
+        case INFO_LVL: {
             WriteInfo(message, flush_on_each_message_, *output_);
             break;
-        } case DEBUG: {
+        } case DEBUG_LVL: {
             WriteDebug(message, flush_on_each_message_, *output_);
             break;
-        } case ERROR: {
+        } case ERROR_LVL: {
             WriteError(message, flush_on_each_message_, *output_);
             break;
-        } case CRITICAL: {
+        } case CRITICAL_LVL: {
             WriteCritical(message, flush_on_each_message_, *output_);
             break;
         }
