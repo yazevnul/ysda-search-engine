@@ -13,14 +13,6 @@ namespace ycrawler {
         class VectorWithMutex {
         public:
             VectorWithMutex() = default;
-            explicit VectorWithMutex(const std::vector<T>& data)
-                : data_{data} {
-            }
-
-            explicit VectorWithMutex(std::vector<T>&& data)
-                : data_{std::forward<std::vector<T>>(data)} {
-            }
-
             void Push(const T& value) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 data_.push_back(value);
