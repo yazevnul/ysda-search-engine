@@ -82,7 +82,7 @@ private:
         processed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
             state_dir + config_.state().processed_urls_file_name()
         ));
-        const auto& doc_data_dir = config_.documents().url_to_id_file_name();
+        const auto& doc_data_dir = config_.documents().documents_data_directory();
         url_to_id_.Load(doc_data_dir + config_.documents().url_to_id_file_name());
         web_graph_.Set(ysave_load::Load<ygraph::SparceGraph<sci::url::UrlId>>(
             doc_data_dir + config_.documents().web_graph_file_name()
