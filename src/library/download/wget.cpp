@@ -1,30 +1,17 @@
-#include "interface.h"
 #include "wget.h"
 
-#include <cstdlib>
 #include <stdexcept>
 #include <string>
 
+#include <cstdlib>
 
-class CommandProcessorAvailabilityChecker {
-public:
-    inline CommandProcessorAvailabilityChecker()
-        : available_(system(nullptr)) {
-    }
-
-    inline bool IsAvailable() {
-        return available_;
-    }
-
-private:
-    bool available_;
-};
+static const bool COMMAND_PROCESSOR_EXISTS = system(nullptr);
 
 
 ydownload::WgetDownloader::WgetDownloader() {
-    static auto checker = CommandProcessorAvailabilityChecker();
-    if (! checker.IsAvailable())
-        throw std::runtime_error("command processor is unavailable");
+    if (!COMMAND_PROCESSOR_EXISTS) {
+        throw std::runtime_error{"command processor is unavailable"};
+    }
 }
 
 
