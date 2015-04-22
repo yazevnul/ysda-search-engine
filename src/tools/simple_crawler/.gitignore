@@ -4,3 +4,4 @@ docs/*
 docs_data/*
 new.stderr.txt
 restore.stderr.txt
+my_config.json
