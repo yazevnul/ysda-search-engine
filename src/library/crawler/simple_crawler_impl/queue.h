@@ -64,6 +64,11 @@ namespace ycrawler {
                 return { false, value };
             }
 
+            bool Empty() const {
+                std::lock_guard<std::mutex> lock_guard{mutex_};
+                return heap_.empty();
+            }
+
             void Load(const std::string& file_name);
 
             void Save(const std::string& file_name) const;
