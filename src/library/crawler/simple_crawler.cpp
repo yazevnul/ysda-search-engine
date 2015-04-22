@@ -203,9 +203,9 @@ static std::string ReadFile(const std::string& file_name) {
 
 
 void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
-    if (processed_urls_.Size() >= 20) {
+/*    if (processed_urls_.Size() >= 5) {
         return;
-    }
+    }*/
 
 //    static std::mutex lovely_mutex;
 
