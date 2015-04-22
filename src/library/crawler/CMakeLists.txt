@@ -14,5 +14,4 @@ add_library(crawler ${SOURCES})
 target_link_libraries(crawler
     protobuf_helpers
     simple_crawler_impl
-    thread_pool
 )
