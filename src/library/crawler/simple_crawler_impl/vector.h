@@ -45,8 +45,8 @@ namespace ycrawler {
             }
 
         private:
+            mutable std::mutex mutex_;
             std::vector<T> data_;
-            std::mutex mutex_;
         };
 
     }  // namespace sci
