@@ -9,6 +9,7 @@
 #include <library/crawler/simple_crawler_impl/vector.h>
 #include <library/download/wget.h>
 #include <library/graph/graph.h>
+#include <library/logger/logger.h>
 #include <library/protobuf_helpers/serialization.h>
 #include <library/save_load/save_load.h>
 
@@ -207,23 +208,15 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
         return;
     }*/
 
-//    static std::mutex lovely_mutex;
-
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
     const auto queue_response = urls_queue_.Pop();
     if (queue_response.empty) {
-/*        {
-            std::lock_guard<std::mutex> lock{lovely_mutex};
-            std::cerr << "queue is empty" << std::endl;
-        }*/
+        LOG_IF_DEBUG(ylogger::GetClog(), "queue is empty");
         return;
     }
     const auto url = url_to_id_.Get(queue_response.url_with_tries.id);
-/*    {
-        std::lock_guard<std::mutex> lock{lovely_mutex};
-        std::cerr << "processing url: " << url << std::endl;
-    }*/
+    LOG_IF_DEBUG(ylogger::GetClog(), std::string{"processing url: "} + url);
     const auto url_file_name = config_.documents().documents_directory()
                                 + std::to_string(queue_response.url_with_tries.id);
     const auto response = downloader->Download(url, url_file_name);
@@ -253,10 +246,7 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
     }
     web_graph_.Add(queue_response.url_with_tries.id, std::move(out_url_ids));
     processed_urls_.Push(queue_response.url_with_tries.id);
-/*    {
-        std::lock_guard<std::mutex> lock{lovely_mutex};
-        std::cerr << "queue size: " << urls_queue_.Size() << std::endl;
-    }*/
+    LOG_IF_DEBUG(ylogger::GetClog(), std::string{"queue_size: "} + std::to_string(urls_queue_.Size()));
 }
 
 
