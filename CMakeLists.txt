@@ -46,6 +46,7 @@ endif()
 
 # Compiler independent optoins
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
+set(CMAKE_CXX_FLAGS_DEBUG "-DDEBUG=1")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
