@@ -2,6 +2,8 @@
 #include "url_extractor.h"
 
 #include <library/crawler/simple_crawler_impl/graph.h>
+#include <library/crawler/simple_crawler_impl/queue.h>
+#include <library/crawler/simple_crawler_impl/url_to_id.h>
 #include <library/crawler/simple_crawler_impl/urls.h>
 #include <library/crawler/simple_crawler_impl/vector.h>
 #include <library/download/wget.h>
