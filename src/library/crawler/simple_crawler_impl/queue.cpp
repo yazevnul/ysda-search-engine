@@ -31,7 +31,7 @@ ysave_load::detail::LoadImpl<std::vector<ycrawler::sci::url::UrlIdWithTries>>::D
         parser >> value.id >> value.tries;
         data.push_back(value);
     }
-    return data;
+    return std::move(data);
 }
 
 

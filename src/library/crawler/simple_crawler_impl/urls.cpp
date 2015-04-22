@@ -37,10 +37,11 @@ ysave_load::detail::LoadImpl<std::vector<ycrawler::sci::url::UrlId>>::Do(
     for (auto line = std::string{}; std::getline(input, line);) {
         auto&& parser = std::stringstream{line};
         auto value = ycrawler::sci::url::UrlId{};
-        parser >> value;
-        data.push_back(value);
+        if (parser >> value) {
+            data.push_back(value);
+        }
     }
-    return data;
+    return std::move(data);
 }
 
 
