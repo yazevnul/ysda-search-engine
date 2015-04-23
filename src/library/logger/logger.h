@@ -48,6 +48,6 @@ namespace ylogger {
 
 
     // will return Logger wrapper for std::clog which would flush on each message
-    std::shared_ptr<ILogger>& GetClog();
+    const std::shared_ptr<ILogger>& GetClog();
 
 }  // namespace ylogger

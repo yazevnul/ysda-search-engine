@@ -1,15 +1,14 @@
 #include "logger.h"
 
 #include <chrono>
-#include <ctime>
-#include <iomanip>
 #include <iostream>
 #include <mutex>
 #include <ostream>
 #include <string>
 
+#include <ctime>
 
-std::shared_ptr<ylogger::ILogger>& ylogger::GetClog() {
+const std::shared_ptr<ylogger::ILogger>& ylogger::GetClog() {
     static std::shared_ptr<ylogger::ILogger> clog = std::make_shared<ylogger::Logger>(
         &std::clog, true
     );
@@ -23,9 +22,19 @@ static constexpr char PREFIX_ERROR[] = "ERROR: ";
 static constexpr char PREFIX_CRITICAL[] = "CRITICAL: ";
 
 
+static std::string ToString(const std::time_t the_time) {
+    // pretty boring
+    char buffer[100];
+    if (std::strftime(buffer, sizeof(buffer), "%F %T", std::gmtime(&the_time))) {
+        return buffer;
+    }
+    return {};
+}
+
+
 static void WriteTime(std::ostream& output) {
     const auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    output << std::put_time(std::gmtime(&now), "%F %T") << '\t';
+    output << ToString(now) << '\t';
 }
 
 
@@ -122,3 +131,10 @@ void ylogger::Logger::Write(const std::string& message, const Level level) {
         }
     };
 }
+
+
+void ylogger::Logger::SetFlushOnEachMessage(const bool value) {
+    std::lock_guard<std::mutex> lock_guard{mutex_};
+    flush_on_each_message_ = value;
+}
+
