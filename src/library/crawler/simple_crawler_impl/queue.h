@@ -51,6 +51,12 @@ namespace ycrawler {
             struct Response {
                 bool empty = true;
                 url::UrlIdWithTries url_with_tries = {};
+
+                Response() = default;
+                Response(const bool empty_other, const url::UrlIdWithTries ulr_id_with_tries_other)
+                    : empty{empty_other}
+                    , url_with_tries{ulr_id_with_tries_other} {
+                }
             };
 
             Response Pop() {

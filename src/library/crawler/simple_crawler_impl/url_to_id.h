@@ -30,6 +30,12 @@ namespace ycrawler {
             struct Response {
                 bool known = false;
                 url::UrlId id = {};
+
+                Response() = default;
+                Response(const bool known_other, const url::UrlId id_other)
+                    : known{known_other}
+                    , id{id_other} {
+                }
             };
 
             template <typename It>
