@@ -11,3 +11,4 @@ find_package(Threads REQUIRED)
 
 add_subdirectory(library)
 add_subdirectory(tools)
+add_subdirectory(third_party)

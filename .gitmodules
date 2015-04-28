@@ -7,3 +7,6 @@
 [submodule "src/third_party/ThreadPool"]
 	path = src/third_party/ThreadPool
 	url = https://github.com/progschj/ThreadPool.git
+[submodule "src/third_party/g3log"]
+	path = src/third_party/g3log
+	url = https://github.com/KjellKod/g3log.git
