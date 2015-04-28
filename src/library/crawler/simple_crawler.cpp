@@ -14,7 +14,6 @@
 #include <library/protobuf_helpers/serialization.h>
 #include <library/save_load/save_load.h>
 
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -98,7 +97,7 @@ private:
         try {
             urls_queue_.Save(state_dir + config_.state().queued_urls_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
 
         try {
@@ -106,7 +105,7 @@ private:
                 failed_urls_.Get(), state_dir + config_.state().failed_urls_file_name()
             );
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
 
         try {
@@ -114,14 +113,14 @@ private:
                 processed_urls_.Get(), state_dir + config_.state().processed_urls_file_name()
             );
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
 
         const auto& doc_data_dir = config_.documents().documents_data_directory();
         try {
             url_to_id_.Save(doc_data_dir + config_.documents().url_to_id_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
 
         try {
@@ -130,14 +129,14 @@ private:
                 doc_data_dir + config_.documents().web_graph_file_name()
             );
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
 
         // We write config as the last one
         try {
             yproto::WriteDelimitedToFile(config_, state_dir + config_.state().config_file_name());
         } catch (const std::exception& exc) {
-            std::cerr << __FILE__ << ':' << __LINE__ << " EXCEPTION: " << exc.what() << std::endl;
+            LOGF(WARNING, "exception occured: %s", exc.what());
         }
     }
 
