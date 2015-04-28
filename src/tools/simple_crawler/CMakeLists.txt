@@ -13,4 +13,5 @@ target_link_libraries(simple_crawler
     download
     json
     mod_chooser
+    g3logger
 )

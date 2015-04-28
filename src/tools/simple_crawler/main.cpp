@@ -1,4 +1,6 @@
 #include <third_party/cxxopts/src/cxxopts.hpp>
+#include <third_party/g3log/src/g2log.hpp>
+#include <third_party/g3log/src/g2logworker.hpp>
 #include <third_party/json11/json11.hpp>
 
 #include <library/crawler/simple_crawler.h>
@@ -53,6 +55,8 @@ auto ParseConfig(const std::string& file_name) {
             config.set_processed_urls_is_limited(kv.second.bool_value());
         } else if ("processed_urls_limit" == kv.first) {
             config.set_processed_urls_limit(static_cast<std::uint32_t>(kv.second.int_value()));
+        } else if ("logs_directory" == kv.first) {
+            config.set_logs_directory(kv.second.string_value());
         } else if ("state" == kv.first) {
             if (!kv.second.is_object()) {
                 std::runtime_error{"Malformed config"};
@@ -137,6 +141,9 @@ namespace mode_new {
         const auto args = ParseOptions(argc, argv);
         const auto config = ParseConfig(args.config_file_name);
 
+        auto logger = g2::LogWorker::createWithDefaultLogger(MODE_NAME, config.logs_directory());
+        g2::initializeLogging(logger.worker.get());
+
         auto crawler = std::make_unique<ycrawler::SimpleCrawler>();
         crawler->SetConfig(config);
         crawler->Start();
@@ -155,6 +162,7 @@ namespace mode_restore {
     struct Args {
         std::string config_file_name;
         bool move_failed_to_queue = false;
+        std::string logs_directory = "logs";
     };
 
 
@@ -171,6 +179,11 @@ namespace mode_restore {
             "Move failed urls to queue",
             cxxopts::value<>(args.move_failed_to_queue)
         )(
+            "l,logs",
+            "Directory with logs",
+            cxxopts::value<>(args.logs_directory),
+            "DIR"
+        )(
             "h,help",
             "Print help"
         );
@@ -185,6 +198,9 @@ namespace mode_restore {
 
     int Main(int argc, char* argv[]) {
         const auto args = ParseOptions(argc, argv);
+
+        auto logger = g2::LogWorker::createWithDefaultLogger(MODE_NAME, args.logs_directory);
+        g2::initializeLogging(logger.worker.get());
 
         auto crawler = std::make_unique<ycrawler::SimpleCrawler>();
         crawler->Restore(args.config_file_name);

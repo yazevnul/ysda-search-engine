@@ -24,6 +24,8 @@ message SimpleCrawlerConfig {
     optional bool processed_urls_is_limited        = 6 [default = true];
     optional uint32 processed_urls_limit           = 7 [default = 30];
 
+    optional string logs_directory                 = 8 [default = "logs"];
+
     optional State state                           = 4;
     optional Documents documents                   = 5;
 };
