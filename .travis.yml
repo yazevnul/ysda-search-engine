@@ -18,7 +18,6 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
-            - libc++
             - libprotobuf-dev
             - protobuf-compiler
     - compiler: clang
@@ -30,7 +29,6 @@ matrix:
             - llvm-toolchain-precise # latest
           packages:
             - clang-3.7
-            - libc++
             - libprotobuf-dev
             - protobuf-compiler
     - compiler: gcc
