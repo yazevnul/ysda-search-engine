@@ -55,6 +55,11 @@ before_install:
     eval "${CC} --version"
     eval "${CXX} --version"
 
+    sed -i.backup 's/c++11/c++14/' src/third_party/g3log/Build.cmake
+    if [ ${CC} == 'clang' ]; then
+        sed -i.backup '19s/libc++/libstdc++/' src/third_party/g3log/Build.cmake
+    fi
+
 before_script:
     - cmake .
 
