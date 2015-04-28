@@ -49,6 +49,10 @@ auto ParseConfig(const std::string& file_name) {
             }
         } else if ("tries_limit" == kv.first) {
             config.set_tries_limit(static_cast<std::uint32_t>(kv.second.int_value()));
+        } else if ("processed_urls_is_limited" == kv.first) {
+            config.set_processed_urls_is_limited(kv.second.bool_value());
+        } else if ("processed_urls_limit" == kv.first) {
+            config.set_processed_urls_limit(static_cast<std::uint32_t>(kv.second.int_value()));
         } else if ("state" == kv.first) {
             if (!kv.second.is_object()) {
                 std::runtime_error{"Malformed config"};

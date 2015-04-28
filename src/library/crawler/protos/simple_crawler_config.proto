@@ -19,6 +19,11 @@ message SimpleCrawlerConfig {
     optional uint32 threads                        = 1 [default = 4];
     repeated string urls_seed                      = 2;
     optional uint32 tries_limit                    = 3 [default = 10];
+
+    // for debugging purpose
+    optional bool processed_urls_is_limited        = 6 [default = true];
+    optional uint32 processed_urls_limit           = 7 [default = 30];
+
     optional State state                           = 4;
     optional Documents documents                   = 5;
 };

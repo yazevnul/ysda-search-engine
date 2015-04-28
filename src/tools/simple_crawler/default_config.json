@@ -4,6 +4,8 @@
         "http://simple.wikipedia.org/wiki/Main_Page"
     ],
     "tries_limit": 10,
+    "processed_urls_is_limited": true,
+    "processed_urls_limit": 30,
     "state": {
         "directory": "simple_crawler_state/",
         "queued_urls_file_name": "queued_urls.tsv",

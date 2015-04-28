@@ -204,9 +204,10 @@ static std::string ReadFile(const std::string& file_name) {
 
 
 void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
-/*    if (processed_urls_.Size() >= 5) {
+    if (config_.processed_urls_is_limited()
+            && processed_urls_.Size() >= config_.processed_urls_limit()) {
         return;
-    }*/
+    }
 
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
