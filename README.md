@@ -6,6 +6,14 @@ Search engine we build during practice lessons on "Information Retrieval" at Yan
 * Google Protocol Buffers 2.6+
 * CMake
 
+Compilation on Ubuntu with Clang is a bit tricky because of [g3log][g3log] dependency. You will
+either need to install libc++ and libc++abi packages (which are not available on Ubuntu Precise, but
+you can steel build them yourself, see instruction [here][libcxx] and [here][libcxx-hacking]), or
+you may try to patch [g3log][g3log] build scripts the way it is done in
+[travis-ci config][self-travis-ci-config]. If you are going to patch [g3log][g3log] build scripts,
+I'd like to warn you, that despite the fact that it will compile without errors, I haven't launch
+any binary after applying this patch.
+
 ## Crawl [simple.wikipedia.org](http://simple.wikipedia.org)
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Release . && make -j
@@ -59,3 +67,11 @@ Documents (exact boolean search) [0]:[  ]
 Documents BM25(fuzzy boolean search) [15]:[ (27229, 13.7935), (5123, 13.5138), (12597, 12.2625), (15747, 8.89745), (3474, 8.59382), (3404, 8.55548), (3556, 8.01631), (231, 7.60316), (1024, 7.22213), (5046, 6.68208), (22506, 5.5575), (11574, 5.52548), (13870, 5.49746), (9292, 2.86138), (24902, 1.09459) ]
 Documents BM25(exact boolean search) [0]:[  ]
 ```
+
+[json11] https://github.com/dropbox/json11.git
+[cxxopts] https://github.com/jarro2783/cxxopts.git
+[thread-pool] https://github.com/progschj/ThreadPool.git
+[g3log] https://github.com/KjellKod/g3log.git
+[libcxx] http://libcxx.llvm.org
+[libcxx-hacking] https://github.com/maidsafe/MaidSafe/wiki/Hacking-with-Clang-llvm-abi-and-llvm-libc
+[self-travis-ci-config] https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
