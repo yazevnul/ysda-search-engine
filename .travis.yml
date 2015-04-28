@@ -45,10 +45,18 @@ matrix:
 
 before_install:
   - |
-    if [ ${CC} == 'clang' ]; then
+    YAZEVNUL_IS_CLANG=false
+    YAZEVNUL_IS_GCC=false
+    if [ "${CC}" == 'clang' ]; then
+        YAZEVNUL_IS_CLANG=true
+    elif [ "${CC}" == 'gcc' ]; then
+        YAZEVNUL_IS_GCC=true
+    fi
+
+    if [ "${YAZEVNUL_IS_CLANG}" = true ]; then
         export CC="/usr/lib/llvm-${CLANG_VERSION}/bin/clang"
         export CXX="/usr/lib/llvm-${CLANG_VERSION}/bin/clang++"
-    elif [ ${CC} == 'gcc' ]; then
+    elif [ "${YAZEVNUL_IS_GCC}" = true ]; then
         export CC="/usr/bin/gcc-${GCC_VERSION}"
         export CXX="/usr/bin/g++-${GCC_VERSION}"
     fi
@@ -56,7 +64,7 @@ before_install:
     eval "${CXX} --version"
 
     sed -i.backup 's/c++11/c++14/' src/third_party/g3log/Build.cmake
-    if [ ${CC} == 'clang' ]; then
+    if [ "${YAZEVNUL_IS_CLANG}" = true ]; then
         sed -i.backup '19s/libc++/libstdc++/' src/third_party/g3log/Build.cmake
     fi
 
