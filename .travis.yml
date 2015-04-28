@@ -18,7 +18,8 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
-            - protobuf
+            - libprotobuf-dev
+            - protobuf-compiler
     - compiler: clang
       env: CLANG_VERSION=3.7
       addons:
@@ -28,7 +29,8 @@ matrix:
             - llvm-toolchain-precise # latest
           packages:
             - clang-3.7
-            - protobuf
+            - libprotobuf-dev
+            - protobuf-compiler
     - compiler: gcc
       env: GCC_VERSION=4.9
       addons:
@@ -37,7 +39,8 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-4.9
-            - protobuf
+            - libprotobuf-dev
+            - protobuf-compiler
 
 before_install:
   - |
