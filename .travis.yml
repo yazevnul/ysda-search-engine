@@ -65,6 +65,7 @@ before_install:
 
     sed -i.backup 's/c++11/c++14/' src/third_party/g3log/Build.cmake
     if [ "${YAZEVNUL_IS_CLANG}" = true ]; then
+        sed -i.backup '17s/c++abi//' src/third_party/g3log/Build.cmake
         sed -i.backup '19s/libc++/libstdc++/' src/third_party/g3log/Build.cmake
     fi
 
