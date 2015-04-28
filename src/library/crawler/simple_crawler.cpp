@@ -212,8 +212,8 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
     const auto queue_response = urls_queue_.Pop();
-    if (queue_response.empty) {
-        LOGF(INFO, "Queue is empty");
+    LOGF(DEBUG, "Queue size %zu", queue_response.size);
+    if (0 == queue_response.size) {
         return;
     }
     const auto url = url_to_id_.Get(queue_response.url_with_tries.id);
@@ -234,6 +234,7 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
 
     const auto url_content = ReadFile(url_file_name);
     const auto links = link_extractor->Extract(url_content);
+    LOGF(DEBUG, "Links found:  %zu", links.size());
     const auto link_statuses = url_to_id_.Add(links.begin(), links.end());
     for (const auto& link_status: link_statuses) {
         if (!link_status.known) {

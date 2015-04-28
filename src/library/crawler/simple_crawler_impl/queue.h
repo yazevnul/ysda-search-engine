@@ -49,12 +49,12 @@ namespace ycrawler {
             }
 
             struct Response {
-                bool empty = true;
+                size_t size = {};
                 url::UrlIdWithTries url_with_tries = {};
 
                 Response() = default;
-                Response(const bool empty_other, const url::UrlIdWithTries ulr_id_with_tries_other)
-                    : empty{empty_other}
+                Response(const size_t size_other, const url::UrlIdWithTries ulr_id_with_tries_other)
+                    : size{size_other}
                     , url_with_tries{ulr_id_with_tries_other} {
                 }
             };
@@ -69,7 +69,8 @@ namespace ycrawler {
                 std::pop_heap(heap_.begin(), heap_.end());
                 const auto value = heap_.back();
                 heap_.pop_back();
-                return { false, value };
+                // return size of queue at the moment we call Pop()
+                return { heap_.size() + 1, value };
             }
 
             bool Empty() const {
