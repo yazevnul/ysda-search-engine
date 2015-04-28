@@ -41,6 +41,17 @@ matrix:
             - gcc-4.9
             - libprotobuf-dev
             - protobuf-compiler
+    - compiler: gcc
+      env: GCC_VERSION=5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - libprotobuf-dev
+            - protobuf-compiler
+
 
 before_install:
   - |
