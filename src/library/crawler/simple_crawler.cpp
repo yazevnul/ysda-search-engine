@@ -64,6 +64,7 @@ private:
     void StartImpl();
 
     void Init() {
+        LOG(INFO) << "Crawler initialization started";
         const auto url_statuses = url_to_id_.Add(
             config_.urls_seed().begin(), config_.urls_seed().end()
         );
@@ -72,9 +73,11 @@ private:
         }
         config_.clear_urls_seed();
         valid_ = true;
+        LOG(INFO) << "Crawler initialization finished";
     }
 
     void Load() {
+        LOG(INFO) << "Crawler state loading started";
         const auto& state_dir = config_.state().directory();
         urls_queue_.Load(state_dir + config_.state().queued_urls_file_name());
         failed_urls_.Set(ysave_load::Load<std::vector<sci::url::UrlId>>(
@@ -90,9 +93,11 @@ private:
         ));
         valid_ = true;
         should_save_ = true;
+        LOG(INFO) << "Crawler state loading ended";
     }
 
     void Save() noexcept {
+        LOG(INFO) << "Crawler state saving started";
         const auto& state_dir = config_.state().directory();
         try {
             urls_queue_.Save(state_dir + config_.state().queued_urls_file_name());
@@ -138,6 +143,7 @@ private:
         } catch (const std::exception& exc) {
             LOGF(WARNING, "exception occured: %s", exc.what());
         }
+        LOG(INFO) << "Crawler state saving finished";
     }
 
 
