@@ -68,10 +68,10 @@ Documents BM25(fuzzy boolean search) [15]:[ (27229, 13.7935), (5123, 13.5138), (
 Documents BM25(exact boolean search) [0]:[  ]
 ```
 
-[json11] https://github.com/dropbox/json11.git
-[cxxopts] https://github.com/jarro2783/cxxopts.git
-[thread-pool] https://github.com/progschj/ThreadPool.git
-[g3log] https://github.com/KjellKod/g3log.git
-[libcxx] http://libcxx.llvm.org
-[libcxx-hacking] https://github.com/maidsafe/MaidSafe/wiki/Hacking-with-Clang-llvm-abi-and-llvm-libc
-[self-travis-ci-config] https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
+[json11]: https://github.com/dropbox/json11.git
+[cxxopts]: https://github.com/jarro2783/cxxopts.git
+[thread-pool]: https://github.com/progschj/ThreadPool.git
+[g3log]: https://github.com/KjellKod/g3log.git
+[libcxx]: http://libcxx.llvm.org
+[libcxx-hacking]: https://github.com/maidsafe/MaidSafe/wiki/Hacking-with-Clang-llvm-abi-and-llvm-libc
+[self-travis-ci-config]: https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
