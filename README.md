@@ -3,7 +3,7 @@ Search engine we build during practice lessons on "Information Retrieval" at Yan
 
 ## Requirements
 * Clang 3.6+ or GCC-4.9+
-* Google Protocol Buffers 2.6+
+* Google Protocol Buffers 2.4+
 * CMake
 
 Compilation on Ubuntu with Clang is a bit tricky because of [g3log][g3log] dependency. You will
