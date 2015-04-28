@@ -1,5 +1,4 @@
 #!/bin/bash -e
 
-mkdir docs & \
-    mkdir docs_data & \
-    mkdir simple_crawler_state
+mkdir docs docs_data simple_crawler_state logs
+
