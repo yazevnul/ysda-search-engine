@@ -60,14 +60,17 @@ before_install:
         export CC="/usr/bin/gcc-${GCC_VERSION}"
         export CXX="/usr/bin/g++-${GCC_VERSION}"
     fi
-    eval "${CC} --version"
-    eval "${CXX} --version"
 
     sed -i.backup 's/c++11/c++14/' src/third_party/g3log/Build.cmake
     if [ "${YAZEVNUL_IS_CLANG}" = true ]; then
         sed -i.backup '17s/c++abi//' src/third_party/g3log/Build.cmake
         sed -i.backup '19s/libc++/libstdc++/' src/third_party/g3log/Build.cmake
     fi
+
+    eval "${CC} --version"
+    eval "${CXX} --version"
+    cmake --version
+    protoc --version
 
 before_script:
     - cmake .
