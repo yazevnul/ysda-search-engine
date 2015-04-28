@@ -69,7 +69,6 @@ before_install:
     eval "${CC} --version"
     eval "${CXX} --version"
     cmake --version
-    protoc --version
 
 before_script:
     - cmake .
