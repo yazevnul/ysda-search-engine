@@ -18,17 +18,17 @@ namespace ycrawler {
             virtual ~VectorWithMutex() noexcept = default;
 
             void Push(const T& value) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 data_.push_back(value);
             }
 
             void Push(T&& value) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 data_.push_back(std::forward<T>(value));
             }
 
             auto Size() const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 return data_.size();
             }
 

@@ -22,7 +22,7 @@ namespace ycrawler {
             virtual ~UrlsQueue() noexcept = default;
 
             void Push(const url::UrlIdWithTries& data) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 heap_.push_back(data);
                 std::push_heap(heap_.begin(), heap_.end());
             }
@@ -33,7 +33,7 @@ namespace ycrawler {
                     std::is_same<url::UrlId, typename std::iterator_traits<It>::value_type>::value,
                     "Wrong type"
                 );
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 for (; begin != end; ++begin) {
                     heap_.push_back({*begin, 0});
                     std::push_heap(heap_.begin(), heap_.end());
@@ -45,7 +45,7 @@ namespace ycrawler {
                 static_assert(
                     std::is_same<url::UrlId, typename T::value_type>::value, "Wrong type"
                 );
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 for (const auto& value: data) {
                     heap_.push_back({value, 0});
                     std::push_heap(heap_.begin(), heap_.end());
@@ -64,7 +64,7 @@ namespace ycrawler {
             };
 
             Response Pop() {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
 
                 if (heap_.empty()) {
                     return {};
@@ -78,12 +78,12 @@ namespace ycrawler {
             }
 
             bool Empty() const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 return heap_.empty();
             }
 
             auto Size() const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 return heap_.size();
             }
 

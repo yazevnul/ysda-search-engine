@@ -23,7 +23,7 @@ namespace ycrawler {
             virtual ~SparceGraphWithMutex() noexcept = default;
 
             void Add(const T vertice, std::vector<T>&& to) {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 if (to.empty()) {
                     ++graph_.sink_vertices_count;
                 }

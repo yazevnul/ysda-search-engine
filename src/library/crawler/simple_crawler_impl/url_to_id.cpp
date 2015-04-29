@@ -39,7 +39,7 @@ ysave_load::detail::LoadImpl<std::unordered_map<std::string, ycrawler::sci::url:
 
 
 void ycrawler::sci::UrlToId::Load(const std::string& file_name) {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
+    std::lock_guard<std::mutex> lock_guard{object_mutex_};
     direct_ = ysave_load::Load<std::unordered_map<std::string, url::UrlId>>(file_name);
     reverse_.clear();
     for (const auto& value: direct_) {
@@ -49,7 +49,7 @@ void ycrawler::sci::UrlToId::Load(const std::string& file_name) {
 
 
 void ycrawler::sci::UrlToId::Save(const std::string& file_name) const {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
+    std::lock_guard<std::mutex> lock_guard{object_mutex_};
     ysave_load::Save(direct_, file_name);
 }
 

@@ -22,12 +22,12 @@ namespace ycrawler {
             virtual ~UrlToId() noexcept = default;
 
             bool Has(const std::string& url) const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 return direct_.find(url) != direct_.end();
             }
 
             bool Has(const url::UrlId& id) const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 return reverse_.find(id) != reverse_.cend();
             }
 
@@ -53,7 +53,7 @@ namespace ycrawler {
                     "Iterator value type must be std::string"
                 );
 
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 std::vector<Response> result;
                 for (auto it = begin; it != end; ++it) {
                     const auto& url = *it;
@@ -74,7 +74,7 @@ namespace ycrawler {
             }
 
             url::UrlId Get(const std::string& url) const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 auto it = direct_.find(url);
                 if (direct_.end() == it) {
                     throw std::runtime_error{"Unable to get ID"};
@@ -83,7 +83,7 @@ namespace ycrawler {
             }
 
             std::string Get(const url::UrlId& id) const {
-                std::lock_guard<std::mutex> lock_guard{mutex_};
+                std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 auto it = reverse_.find(id);
                 if (reverse_.end() == it) {
                     throw std::runtime_error{"Unable to get URL"};

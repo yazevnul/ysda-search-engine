@@ -36,14 +36,14 @@ ysave_load::detail::LoadImpl<std::vector<ycrawler::sci::url::UrlIdWithTries>>::D
 
 
 void ycrawler::sci::UrlsQueue::Load(const std::string& file_name) {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
+    std::lock_guard<std::mutex> lock_guard{object_mutex_};
     heap_ = ysave_load::Load<std::vector<url::UrlIdWithTries>>(file_name);
     std::make_heap(heap_.begin(), heap_.end());
 }
 
 
 void ycrawler::sci::UrlsQueue::Save(const std::string& file_name) const {
-    std::lock_guard<std::mutex> lock_guard{mutex_};
+    std::lock_guard<std::mutex> lock_guard{object_mutex_};
     ysave_load::Save(heap_, file_name);
 }
 

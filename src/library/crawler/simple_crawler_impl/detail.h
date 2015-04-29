@@ -11,7 +11,7 @@ namespace ycrawler {
             virtual ~WithMutex() noexcept = 0;
 
         protected:
-            mutable std::mutex mutex_;
+            mutable std::mutex object_mutex_;
         };
 
 
