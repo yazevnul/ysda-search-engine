@@ -1,8 +1,19 @@
 #include "url_extractor.h"
 
+#include <algorithm>
 #include <regex>
 #include <string>
 #include <unordered_set>
+
+
+static const std::vector<std::string> NOT_HTML_PAGES_ENDINGS = {
+    ".jpeg",
+    ".jpg",
+    ".pdf",
+    ".png",
+    ".svg",
+    ".webp"
+};
 
 
 // yes, I've read this thread http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags
@@ -10,6 +21,29 @@ static const std::regex SIMPLE_WIKIPEDIA_URL_REGEX{
     R"swiki(<a\s+href="(/wiki/[^"]+)"\s+[^<>]*>[^<>]*</a>)swiki",
     std::regex::ECMAScript | std::regex::icase | std::regex::optimize
 };
+
+
+static bool EndsWith(const std::string& line, const std::string& suffix) {
+    if (suffix.size() > line.size()) {
+        return false;
+    }
+    return std::equal(
+        line.cend() - static_cast<std::string::difference_type>(suffix.size()),
+        line.cend(), suffix.cbegin(),
+        [](const char lhs, const char rhs) {
+            return std::tolower(lhs) == std::tolower(rhs);
+    });
+}
+
+
+static bool IsHtmlPageUrl(const std::string& url) {
+    for (const auto& suffix: NOT_HTML_PAGES_ENDINGS) {
+        if (EndsWith(url, suffix)) {
+            return false;
+        }
+    }
+    return true;
+}
 
 
 std::unordered_set<std::string> ycrawler::GetSimpleWikipediaUrls(const std::string& page) {
@@ -20,7 +54,10 @@ std::unordered_set<std::string> ycrawler::GetSimpleWikipediaUrls(const std::stri
     auto urls_begin = std::sregex_iterator(page.cbegin(), page.cend(), SIMPLE_WIKIPEDIA_URL_REGEX);
     const auto urls_end = std::sregex_iterator();
     for (auto it = urls_begin; urls_end != it; ++it) {
-        urls.insert(prefix + (*it)[1].str());  // actual URL is at index 1
+        const auto url = prefix + (*it)[1].str();  // actual URL is at index 1
+        if (IsHtmlPageUrl(url)) {
+            urls.insert(url);
+        }
     }
 
     return urls;
