@@ -14,7 +14,7 @@ you may try to patch [g3log][g3log] build scripts the way it is done in
 I'd like to warn you, that despite the fact that it will compile without errors, produced binaries
 may not work, since I haven't tried to launch any of them after applying this patch.
 
-## Crawl [simple.wikipedia.org](http://simple.wikipedia.org)
+## Crawl [simple.wikipedia.org][simple-wikipedia]
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Release . && make -j
 cd src/tools/simple_crawler
@@ -75,3 +75,4 @@ Documents BM25(exact boolean search) [0]:[  ]
 [libcxx]: http://libcxx.llvm.org
 [libcxx-hacking]: https://github.com/maidsafe/MaidSafe/wiki/Hacking-with-Clang-llvm-abi-and-llvm-libc
 [self-travis-ci-config]: https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
+[simple-wikipedia]: http://simple.wikipedia.org
