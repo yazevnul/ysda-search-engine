@@ -1,5 +1,7 @@
 #pragma once
 
+#include "detail.h"
+
 #include <third_party/ThreadPool/ThreadPool.h>
 
 #include <atomic>
@@ -14,10 +16,13 @@ namespace ycrawler {
 
     namespace sci {
 
-        class Coordnator {
+        class Coordnator : public WithLock {
         public:
             using Worker = std::function<void()>;
             using Condition = std::function<bool()>;
+
+            Coordnator() = default;
+            virtual ~Coordnator() noexcept = default;
 
             void Run(Worker worker, const std::uint32_t jobs_limit, Condition stop_condition) {
                 jobs_limit_ = jobs_limit;
@@ -28,17 +33,16 @@ namespace ycrawler {
 
         private:
             void Coordinate(Condition stop_condition) {
-                std::unique_lock<std::mutex> add_job_cv_lock{add_job_cv_mutex_};
                 for(;;) {
                     {
-                        std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                        std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
                         for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
                             thread_pool_->enqueue([this] { this->Do(); });
                         }
                     }
-                    add_job_cv_.wait(add_job_cv_lock);
+                    add_job_cv_.wait(object_lock_);
                     {
-                        std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                        std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
                         if (stop_condition && 0 == jobs_running_count_) {
                             break;
                         }
@@ -49,22 +53,21 @@ namespace ycrawler {
             void Do() {
                 worker_();
                 {
-                    std::lock_guard<std::mutex> lock_guard{add_job_mutex_};
+                    std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
                     --jobs_running_count_;
                     add_job_cv_.notify_one();
                 }
             }
 
-            Worker worker_;
-
             std::unique_ptr<ThreadPool> thread_pool_;
             std::uint32_t jobs_limit_ = {};
+
+            Worker worker_;
+
+            std::mutex jobs_running_count_mutex_;
             std::uint32_t jobs_running_count_ = {};
 
-            std::mutex add_job_mutex_;
-
             std::condition_variable add_job_cv_;
-            std::mutex add_job_cv_mutex_;
         };
 
     }  // namespace sci
