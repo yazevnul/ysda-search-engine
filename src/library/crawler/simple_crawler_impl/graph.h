@@ -20,6 +20,7 @@ namespace ycrawler {
             static_assert(std::is_integral<T>::value, "type must be integral");
         public:
             SparceGraphWithMutex() = default;
+            virtual ~SparceGraphWithMutex() noexcept = default;
 
             void Add(const T vertice, std::vector<T>&& to) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};

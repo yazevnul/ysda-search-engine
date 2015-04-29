@@ -18,6 +18,9 @@ namespace ycrawler {
 
         class UrlToId : public WithMutex {
         public:
+            UrlToId() = default;
+            virtual ~UrlToId() noexcept = default;
+
             bool Has(const std::string& url) const {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 return direct_.find(url) != direct_.end();

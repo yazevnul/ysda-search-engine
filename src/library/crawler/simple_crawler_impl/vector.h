@@ -15,6 +15,8 @@ namespace ycrawler {
         class VectorWithMutex : public WithMutex {
         public:
             VectorWithMutex() = default;
+            virtual ~VectorWithMutex() noexcept = default;
+
             void Push(const T& value) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 data_.push_back(value);

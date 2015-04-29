@@ -18,6 +18,9 @@ namespace ycrawler {
 
         class UrlsQueue : public WithMutex {
         public:
+            UrlsQueue() = default;
+            virtual ~UrlsQueue() noexcept = default;
+
             void Push(const url::UrlIdWithTries& data) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
                 heap_.push_back(data);
