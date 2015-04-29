@@ -1,5 +1,7 @@
 sudo: false
 
+cache: apt
+
 language: c++
 
 notifications:
