@@ -19,25 +19,27 @@ namespace ycrawler {
         class Coordnator : public WithLock {
         public:
             using Worker = std::function<void()>;
-            using Condition = std::function<bool()>;
+            using ConditionChecker = std::function<bool()>;
 
             Coordnator() = default;
             virtual ~Coordnator() noexcept = default;
 
-            void Run(Worker worker, const std::uint32_t jobs_limit, Condition stop_condition) {
+            void Run(Worker worker, const std::uint32_t jobs_limit,
+                     ConditionChecker stop_condition_checker) {
                 thread_pool_ = std::make_unique<ThreadPool>(jobs_limit);
                 jobs_limit_ = jobs_limit;
                 worker_ = worker;
+                stop_condition_checker_ = stop_condition_checker;
                 jobs_running_count_ = {};
-                Coordinate(stop_condition);
+                Coordinate();
             }
 
         private:
-            void Coordinate(Condition stop_condition) {
+            void Coordinate() {
                 for(;;) {
                     {
                         std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        const auto should_stop = stop_condition();
+                        const auto should_stop = stop_condition_checker_();
                         if (!should_stop) {
                             for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
                                 thread_pool_->enqueue([this]{ this->RunWorker(); });
@@ -47,7 +49,7 @@ namespace ycrawler {
                     add_job_cv_.wait(object_lock_);
                     {
                         std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        const auto should_stop = stop_condition();
+                        const auto should_stop = stop_condition_checker_();
                         if (should_stop && 0 == jobs_running_count_) {
                             break;
                         }
@@ -68,6 +70,7 @@ namespace ycrawler {
             std::uint32_t jobs_limit_ = {};
 
             Worker worker_;
+            ConditionChecker stop_condition_checker_;
 
             std::mutex jobs_running_count_mutex_;
             std::uint32_t jobs_running_count_ = {};
