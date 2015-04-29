@@ -1,5 +1,7 @@
 #pragma once
 
+#include "detail.h"
+
 #include <library/graph/graph.h>
 
 #include <algorithm>
@@ -14,7 +16,7 @@ namespace ycrawler {
     namespace sci {
 
         template <typename T>
-        class SparceGraphWithMutex {
+        class SparceGraphWithMutex : public WithMutex {
             static_assert(std::is_integral<T>::value, "type must be integral");
         public:
             SparceGraphWithMutex() = default;
@@ -48,7 +50,6 @@ namespace ycrawler {
             }
 
         private:
-            std::mutex mutex_;
             ygraph::SparceGraph<T> graph_;
         };
 

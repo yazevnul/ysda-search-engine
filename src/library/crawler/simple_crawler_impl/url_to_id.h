@@ -1,5 +1,6 @@
 #pragma once
 
+#include "detail.h"
 #include "urls.h"
 
 #include <library/save_load/save_load.h>
@@ -15,7 +16,7 @@ namespace ycrawler {
 
     namespace sci {
 
-        class UrlToId {
+        class UrlToId : public WithMutex {
         public:
             bool Has(const std::string& url) const {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
@@ -92,8 +93,6 @@ namespace ycrawler {
             void Save(const std::string& file_name) const;
 
         private:
-            mutable std::mutex mutex_;
-
             // this place worth optimization (store one copy of a string instead of two)
             std::unordered_map<std::string, url::UrlId> direct_;
             std::unordered_map<url::UrlId, std::string> reverse_;

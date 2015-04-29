@@ -1,5 +1,7 @@
 #pragma once
 
+#include "detail.h"
+
 #include <mutex>
 #include <utility>
 #include <vector>
@@ -10,7 +12,7 @@ namespace ycrawler {
     namespace sci {
 
         template <typename T>
-        class VectorWithMutex {
+        class VectorWithMutex : public WithMutex {
         public:
             VectorWithMutex() = default;
             void Push(const T& value) {
@@ -37,7 +39,6 @@ namespace ycrawler {
             }
 
         private:
-            mutable std::mutex mutex_;
             std::vector<T> data_;
         };
 

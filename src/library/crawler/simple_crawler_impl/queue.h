@@ -1,5 +1,6 @@
 #pragma once
 
+#include "detail.h"
 #include "urls.h"
 
 #include <library/save_load/save_load.h>
@@ -15,7 +16,7 @@ namespace ycrawler {
 
     namespace sci {
 
-        class UrlsQueue {
+        class UrlsQueue : public WithMutex {
         public:
             void Push(const url::UrlIdWithTries& data) {
                 std::lock_guard<std::mutex> lock_guard{mutex_};
@@ -88,7 +89,6 @@ namespace ycrawler {
             void Save(const std::string& file_name) const;
 
         private:
-            mutable std::mutex mutex_;
             std::vector<url::UrlIdWithTries> heap_;
         };
 
