@@ -1,5 +1,5 @@
 # ysda-search-engine [![Build Status](https://travis-ci.org/yazevnul/ysda-search-engine.svg?branch=master)](https://travis-ci.org/yazevnul/ysda-search-engine)
-Search engine we build during practice lessons on "Information Retrieval" at Yandex School of Data Analysis
+Search engine we build during practice lessons on "Information Retrieval" at [Yandex School of Data Analysis][ysda]
 
 ## Requirements
 * Clang 3.6+ or GCC-4.9+
@@ -76,3 +76,4 @@ Documents BM25(exact boolean search) [0]:[  ]
 [libcxx-hacking]: https://github.com/maidsafe/MaidSafe/wiki/Hacking-with-Clang-llvm-abi-and-llvm-libc
 [self-travis-ci-config]: https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
 [simple-wikipedia]: http://simple.wikipedia.org
+[ysda]: https://yandexdataschool.com
