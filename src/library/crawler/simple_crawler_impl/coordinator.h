@@ -25,9 +25,10 @@ namespace ycrawler {
             virtual ~Coordnator() noexcept = default;
 
             void Run(Worker worker, const std::uint32_t jobs_limit, Condition stop_condition) {
+                thread_pool_ = std::make_unique<ThreadPool>(jobs_limit);
                 jobs_limit_ = jobs_limit;
                 worker_ = worker;
-                thread_pool_ = std::make_unique<ThreadPool>(jobs_limit);
+                jobs_running_count_ = {};
                 Coordinate(stop_condition);
             }
 
