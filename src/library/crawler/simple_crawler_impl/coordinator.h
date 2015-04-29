@@ -40,7 +40,7 @@ namespace ycrawler {
                         const auto should_stop = stop_condition();
                         if (!should_stop) {
                             for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
-                                thread_pool_->enqueue([this] { this->Do(); });
+                                thread_pool_->enqueue([this]{ this->Do(); });
                             }
                         }
                     }
