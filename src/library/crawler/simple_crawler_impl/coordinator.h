@@ -47,7 +47,8 @@ namespace ycrawler {
                     add_job_cv_.wait(object_lock_);
                     {
                         std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        if (stop_condition && 0 == jobs_running_count_) {
+                        const auto should_stop = stop_condition();
+                        if (should_stop && 0 == jobs_running_count_) {
                             break;
                         }
                     }
