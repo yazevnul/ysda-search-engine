@@ -11,5 +11,5 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/../..")
 add_library(index ${SOURCE})
 target_link_libraries(index
     ${PROTOBUF_LIBRARIES}
-    protos
+    index_protos
 )
