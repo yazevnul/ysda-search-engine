@@ -9,6 +9,7 @@
 static const std::vector<std::string> NOT_HTML_PAGES_ENDINGS = {
     ".jpeg",
     ".jpg",
+    ".ogg",
     ".pdf",
     ".png",
     ".svg",
