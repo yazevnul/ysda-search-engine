@@ -259,9 +259,9 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
     coordinator_.Run(
-        [this](){ this->ProcessUrl(); },
+        [this]{ this->ProcessUrl(); },
         config_.threads(),
-        [this](){ return this->urls_queue_.Empty(); }
+        [this]{ return this->urls_queue_.Empty(); }
     );
 }
 
