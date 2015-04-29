@@ -14,6 +14,7 @@
 #include <library/protobuf_helpers/serialization.h>
 #include <library/save_load/save_load.h>
 
+#include <functional>
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -210,11 +211,6 @@ static std::string ReadFile(const std::string& file_name) {
 
 
 void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
-    if (config_.processed_urls_is_limited()
-            && processed_urls_.Size() >= config_.processed_urls_limit()) {
-        return;
-    }
-
     const auto downloader = std::make_unique<ydownload::WgetDownloader>();
     const auto link_extractor = std::make_unique<ycrawler::SimpleWikipediaUrlExtractor>();
     const auto queue_response = urls_queue_.Pop();
@@ -258,10 +254,19 @@ void ycrawler::SimpleCrawler::Impl::ProcessUrl() {
 
 
 void ycrawler::SimpleCrawler::Impl::StartImpl() {
+    auto stop_condition_checker = std::function<bool()>{};
+    if (config_.processed_urls_is_limited()) {
+        stop_condition_checker = [this]{
+            return this->processed_urls_.Size() >= this->config_.processed_urls_limit();
+        };
+    } else {
+        stop_condition_checker = [this]{ return this->urls_queue_.Empty(); };
+    }
+
     coordinator_.Run(
         [this]{ this->ProcessUrl(); },
         config_.threads(),
-        [this]{ return this->urls_queue_.Empty(); }
+        stop_condition_checker
     );
 }
 
