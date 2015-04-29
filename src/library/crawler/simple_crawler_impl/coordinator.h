@@ -37,8 +37,11 @@ namespace ycrawler {
                 for(;;) {
                     {
                         std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
-                            thread_pool_->enqueue([this] { this->Do(); });
+                        const auto should_stop = stop_condition();
+                        if (!should_stop) {
+                            for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
+                                thread_pool_->enqueue([this] { this->Do(); });
+                            }
                         }
                     }
                     add_job_cv_.wait(object_lock_);
