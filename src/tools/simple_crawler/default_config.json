@@ -1,25 +1,24 @@
 {
-    "threads": 4,
-    "urls_seed": [
-        "http://simple.wikipedia.org/wiki/Main_Page"
-    ],
-    "tries_limit": 10,
-    "backup_frequency": 1000,
-    "processed_urls_is_limited": true,
-    "processed_urls_limit": 30,
-    "logs_directory": "logs",
-    "state": {
-        "directory": "simple_crawler_state/",
-        "queued_urls_file_name": "queued_urls.tsv",
-        "failed_urls_file_name": "failed_urls.tsv",
-        "processed_urls_file_name": "processed_urls.tsv",
-        "config_file_name": "config.pb.bin"
-    },
-    "documents": {
-        "documents_directory": "docs/",
-        "documents_data_directory": "docs_data/",
-        "url_to_id_file_name": "url_to_id.tsv",
-        "web_graph_file_name": "web_graph.txt"
-    }
+  "threads": 4,
+  "urls_seed": [
+    "http://simple.wikipedia.org/wiki/Main_Page"
+  ],
+  "tries_limit": 10,
+  "backup_frequency": 1000,
+  "processed_urls_is_limited": true,
+  "processed_urls_limit": 30,
+  "logs_directory": "logs",
+  "state": {
+    "directory": "simple_crawler_state/",
+    "queued_urls_file_name": "queued_urls.tsv",
+    "failed_urls_file_name": "failed_urls.tsv",
+    "processed_urls_file_name": "processed_urls.tsv",
+    "config_file_name": "config.pb.bin"
+  },
+  "documents": {
+    "documents_directory": "docs/",
+    "documents_data_directory": "docs_data/",
+    "url_to_id_file_name": "url_to_id.tsv",
+    "web_graph_file_name": "web_graph.txt"
+  }
 }
-
