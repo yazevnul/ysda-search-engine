@@ -5,6 +5,8 @@ Search engine we build during practice lessons on "Information Retrieval" at [Ya
 * Clang 3.6+ or GCC-4.9+
 * Google Protocol Buffers 2.4+
 * CMake 2.8+
+* Wget (used to download pages because I am too lazy to learn to deal with [cpp-netlib][cpp-netlib])
+* sed (for third-party libraries build scripts patching)
 
 Compilation on Ubuntu with Clang is a bit tricky because of [g3log][g3log] dependency. You will
 either need to install libc++ and libc++abi packages (which are not available on Ubuntu Precise, but
@@ -77,3 +79,4 @@ Documents BM25(exact boolean search) [0]:[  ]
 [self-travis-ci-config]: https://github.com/yazevnul/ysda-search-engine/blob/master/.travis.yml
 [simple-wikipedia]: http://simple.wikipedia.org
 [ysda]: https://yandexdataschool.com
+[cpp-netlib]: https://github.com/glynos/cpp-netlib
