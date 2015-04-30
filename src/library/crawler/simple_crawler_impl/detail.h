@@ -28,8 +28,10 @@ namespace ycrawler {
 
             virtual ~WithLock() noexcept  = 0;
 
-        protected:
+        private:
             std::mutex mutex_for_object_lock_;
+
+        protected:
             mutable std::unique_lock<std::mutex> object_lock_;
         };
 
