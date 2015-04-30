@@ -4,7 +4,6 @@
 
 #include <third_party/ThreadPool/ThreadPool.h>
 
-#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <memory>
@@ -16,64 +15,36 @@ namespace ycrawler {
 
     namespace sci {
 
-        class Coordnator : public WithLock {
+        class Coordinator : public WithLock {
         public:
             using Worker = std::function<void()>;
             using ConditionChecker = std::function<bool()>;
+            using BackupTask = std::function<void()>;
 
-            Coordnator() = default;
-            virtual ~Coordnator() noexcept = default;
+            Coordinator() = default;
+            virtual ~Coordinator() noexcept = default;
 
-            void Run(Worker worker, const std::uint32_t jobs_limit,
-                     ConditionChecker stop_condition_checker) {
-                thread_pool_ = std::make_unique<ThreadPool>(jobs_limit);
-                jobs_limit_ = jobs_limit;
-                worker_ = worker;
-                stop_condition_checker_ = stop_condition_checker;
-                jobs_running_count_ = {};
-                Coordinate();
-            }
+            void Run(
+                Worker worker, const std::uint32_t jobs_limit,
+                ConditionChecker stop_condition_checker, BackupTask backup_task,
+                const std::uint32_t backup_freq
+            );
 
         private:
-            void Coordinate() {
-                for(;;) {
-                    {
-                        std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        const auto should_stop = stop_condition_checker_();
-                        if (!should_stop) {
-                            for (; jobs_running_count_ < jobs_limit_; ++jobs_running_count_) {
-                                thread_pool_->enqueue([this]{ this->RunWorker(); });
-                            }
-                        }
-                    }
-                    add_job_cv_.wait(object_lock_);
-                    {
-                        std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                        const auto should_stop = stop_condition_checker_();
-                        if (should_stop && 0 == jobs_running_count_) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            void RunWorker() {
-                worker_();
-                {
-                    std::lock_guard<std::mutex> lock_guard{jobs_running_count_mutex_};
-                    --jobs_running_count_;
-                    add_job_cv_.notify_one();
-                }
-            }
+            void Coordinate();
+            void RunWorker();
 
             std::unique_ptr<ThreadPool> thread_pool_;
             std::uint32_t jobs_limit_ = {};
+            std::uint32_t backup_freq_ = {};
 
             Worker worker_;
             ConditionChecker stop_condition_checker_;
+            BackupTask backup_task_;
 
             std::mutex jobs_running_count_mutex_;
             std::uint32_t jobs_running_count_ = {};
+            std::uint32_t jobs_until_backup_ = {};
 
             std::condition_variable add_job_cv_;
         };

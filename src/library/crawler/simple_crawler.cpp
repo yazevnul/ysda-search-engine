@@ -160,7 +160,7 @@ private:
 
     sci::SparceGraphWithMutex<sci::url::UrlId> web_graph_;
 
-    sci::Coordnator coordinator_;
+    sci::Coordinator coordinator_;
 };
 
 
@@ -266,7 +266,9 @@ void ycrawler::SimpleCrawler::Impl::StartImpl() {
     coordinator_.Run(
         [this]{ this->ProcessUrl(); },
         config_.threads(),
-        stop_condition_checker
+        stop_condition_checker,
+        [this]{ this->Save(); },
+        config_.backup_frequency()
     );
 }
 

@@ -19,6 +19,8 @@ message SimpleCrawlerConfig {
     optional uint32 threads                        = 1 [default = 4];
     repeated string urls_seed                      = 2;
     optional uint32 tries_limit                    = 3 [default = 10];
+    // save crawler state and documents data after each N jobs
+    optional uint32 backup_frequency               = 9 [default = 1000];
 
     // for debugging purpose
     optional bool processed_urls_is_limited        = 6 [default = true];

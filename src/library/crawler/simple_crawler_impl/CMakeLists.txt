@@ -3,6 +3,7 @@ project(simple_crawler_impl)
 include_directories("${CMAKE_CURRENT_LIST_DIR}/../../..")
 
 set(SOURCES
+    coordinator.cpp
     queue.cpp
     url_to_id.cpp
     urls.cpp
