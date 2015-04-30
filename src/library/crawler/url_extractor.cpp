@@ -51,6 +51,11 @@ static bool IsRelevantUrl(const std::string& url) {
         return false;
     }
 
+    const auto last_colon_position = url.find_last_of(':');
+    if (last_colon_position != std::string::npos && last_colon_position > 5) {
+        return false;
+    }
+
     return true;
 }
 
