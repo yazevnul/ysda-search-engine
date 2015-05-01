@@ -9,9 +9,9 @@ Search engine we build during practice lessons on "Information Retrieval" at [Ya
 * sed (for third-party libraries build scripts patching)
 
 Compilation on Ubuntu with Clang is a bit tricky because of [g3log][g3log] dependency. You will
-either need to install libc++ and libc++abi packages (which are not available on Ubuntu Precise, but
-you can steel build them yourself, see instruction [here][libcxx] and [here][libcxx-hacking]), or
-you may try to patch [g3log][g3log] build scripts the way it is done in
+either need to install *libc++* and *libc++abi* packages (which are not available on Ubuntu Precise,
+but you can steel build them yourself, see instruction [here][libcxx] and [here][libcxx-hacking]),
+or you may try to patch [g3log][g3log] build scripts the way it is done in
 [travis-ci config][self-travis-ci-config]. If you are going to patch [g3log][g3log] build scripts,
 I'd like to warn you, that despite the fact that it will compile without errors, produced binaries
 may not work, since I haven't tried to launch any of them after applying this patch.
