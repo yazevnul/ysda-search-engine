@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <limits>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -12,7 +13,16 @@
 
 namespace ygraph {
 
-    template <typename T, typename F>
+    namespace detail {
+
+        template <typename T, typename F>
+        using BFSCallbackSignatureCheck = typename std::result_of<F&(
+            const T from, const T to, const std::vector<bool>& visited
+        )>::type;
+
+    }  // namespace detail
+
+    template <typename T, typename F, typename R=detail::BFSCallbackSignatureCheck<T, F>>
     void BFS(const Graph<T>& graph, const T start, F&& callback);
 
 
@@ -45,7 +55,7 @@ namespace ygraph {
 
 #include <cassert>
 
-template <typename T, typename F>
+template <typename T, typename F, typename R>
 void ygraph::BFS(const Graph<T>&graph, const T start,F&& callback) {
     auto visited = std::vector<bool>(graph.vertices_count);
     auto vertices_queue = std::queue<T>{};
