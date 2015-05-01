@@ -96,11 +96,11 @@ int main(int argc, char* argv[]) {
     const auto args = ParseOptions(argc, argv);
     const auto graph = ysave_load::Load<ygraph::Graph<std::uint32_t>>(args.graph_file_name);
 
-    auto in_degree_future = std::async(ygraph::GetInDegree<std::uint32_t>, std::ref(graph));
-    auto out_degree_future = std::async(ygraph::GetOutDegree<std::uint32_t>, std::ref(graph));
-    auto distance_from_center_future = std::async(
-        GetDistanceFromCenter<std::uint32_t>, std::ref(graph), args.graph_center
-    );
+    auto in_degree_future = std::async([&graph]{ return ygraph::GetInDegree(graph); });
+    auto out_degree_future = std::async([&graph]{ return ygraph::GetOutDegree(graph); });
+    auto distance_from_center_future = std::async([&graph, &args]{
+        return GetDistanceFromCenter(graph, args.graph_center);
+    });
     PrintStatistics(
         in_degree_future.get(), out_degree_future.get(), distance_from_center_future.get(),
         args.output_file_name
