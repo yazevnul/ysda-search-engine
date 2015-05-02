@@ -11,9 +11,16 @@ import bs4
 import nltk
 import urllib
 
+_LXML_IS_AVAILABLE = True
+try:
+    import lxml
+except ImportError, e:
+    _LXML_IS_AVAILABLE = False
+
 
 def extract_text(html):
-    bs = bs4.BeautifulSoup(html, 'lxml')
+    parser_to_use = 'lxml' if _LXML_IS_AVAILABLE else 'html.parser'
+    bs = bs4.BeautifulSoup(html, parser_to_use)
     unwanted_tags = ['script', 'style']
     for node in bs.find_all(unwanted_tags):
         node.extract()
