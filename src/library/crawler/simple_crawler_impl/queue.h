@@ -24,7 +24,7 @@ namespace ycrawler {
             void Push(const url::UrlIdWithTries& data) {
                 std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 heap_.push_back(data);
-                std::push_heap(heap_.begin(), heap_.end());
+                std::push_heap(heap_.begin(), heap_.end(), comparator_);
             }
 
             template <typename It>
@@ -36,7 +36,7 @@ namespace ycrawler {
                 std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 for (; begin != end; ++begin) {
                     heap_.push_back({*begin, 0});
-                    std::push_heap(heap_.begin(), heap_.end());
+                    std::push_heap(heap_.begin(), heap_.end(), comparator_);
                 }
             }
 
@@ -48,7 +48,7 @@ namespace ycrawler {
                 std::lock_guard<std::mutex> lock_guard{object_mutex_};
                 for (const auto& value: data) {
                     heap_.push_back({value, 0});
-                    std::push_heap(heap_.begin(), heap_.end());
+                    std::push_heap(heap_.begin(), heap_.end(), comparator_);
                 }
             }
 
@@ -70,7 +70,7 @@ namespace ycrawler {
                     return {};
                 }
 
-                std::pop_heap(heap_.begin(), heap_.end());
+                std::pop_heap(heap_.begin(), heap_.end(), comparator_);
                 const auto value = heap_.back();
                 heap_.pop_back();
                 // return size of queue at the moment we call Pop()
@@ -92,6 +92,25 @@ namespace ycrawler {
             void Save(const std::string& file_name) const;
 
         private:
+            struct HeapComparator {
+                bool operator ()(
+                    const url::UrlIdWithTries& lhs, const url::UrlIdWithTries& rhs
+                ) const noexcept {
+                    if (lhs.tries < rhs.tries) {
+                        return false;
+                    } else if (lhs.tries > rhs.tries) {
+                        return true;
+                    } else if (lhs.id > rhs.id) {
+                        return true;
+                    } else if (lhs.id < rhs.id) {
+                        return false;
+                    } else {
+                        return false;
+                    }
+                }
+            };
+
+            HeapComparator comparator_;
             std::vector<url::UrlIdWithTries> heap_;
         };
 

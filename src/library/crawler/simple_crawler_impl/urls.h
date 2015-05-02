@@ -31,21 +31,6 @@ namespace ycrawler {
                     : id{id_other}
                     , tries{tries_other} {
                 }
-
-                //! Lesser tries than better
-                bool operator< (const UrlIdWithTries& other) const noexcept {
-                    if (tries < other.tries) {
-                        return false;
-                    } else if (tries > other.tries) {
-                        return true;
-                    } else if (id > other.id) {
-                        return true;
-                    } else if (id < other.id) {
-                        return false;
-                    } else {
-                        return false;
-                    }
-                }
             };
 
         }  // namespace url
