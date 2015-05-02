@@ -56,14 +56,14 @@ def process_input(input_dir_name, output_dir_name, clean_text, jobs_count):
 
 def _existing_directory(path):
     if not os.path.isdir(path):
-        raise RuntimeError('Directory {} doesn\'t exists')
+        raise RuntimeError('Directory {} doesn\'t exists'.format(path))
     return os.path.abspath(path)
 
 
 def _positive_integer(value_str):
     value = int(value_str)
     if value <= 0:
-        raise RuntimeError('{} must be positive integer')
+        raise RuntimeError('{} must be positive integer'.format(value))
     return value
 
 
