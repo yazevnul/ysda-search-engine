@@ -11,6 +11,7 @@ import logging
 
 from itertools import izip, repeat
 
+import common
 import wiki_text_extractor
 
 
@@ -54,19 +55,6 @@ def process_input(input_dir_name, output_dir_name, clean_text, jobs_count):
     pool.join()
 
 
-def _existing_directory(path):
-    if not os.path.isdir(path):
-        raise RuntimeError('Directory {} doesn\'t exists'.format(path))
-    return os.path.abspath(path)
-
-
-def _positive_integer(value_str):
-    value = int(value_str)
-    if value <= 0:
-        raise RuntimeError('{} must be positive integer'.format(value))
-    return value
-
-
 def _parse_options():
     parser = argparse.ArgumentParser(
         'Extract text from all Wikipedia HTML articles in a given directory',
@@ -77,7 +65,7 @@ def _parse_options():
         dest='input_dir',
         metavar='DIR',
         required=True,
-        type=_existing_directory,
+        type=common.existing_directory,
         help='Directory with Wikipedia articles'
     )
     parser.add_argument(
@@ -85,7 +73,7 @@ def _parse_options():
         dest='output_dir',
         metavar='DIR',
         required=True,
-        type=_existing_directory,
+        type=common.existing_directory,
         help='Where to save extracted texts'
     )
     parser.add_argument(
@@ -99,7 +87,7 @@ def _parse_options():
         default='1',
         dest='jobs_count',
         metavar='INT',
-        type=_positive_integer,
+        type=common.positive_integer,
         help='Jobs count'
     )
     return parser.parse_args()

@@ -7,6 +7,8 @@ __author__ = 'yazevnul'
 import argparse
 import os
 
+import common
+
 
 def _parse_options():
     parser = argparse.ArgumentParser(
@@ -18,14 +20,14 @@ def _parse_options():
         dest='input_directory',
         metavar='DIR',
         required=True,
-        type=lambda x: os.path.abspath(x),
+        type=common.existing_directory,
         help='Directory with files'
     )
     parser.add_argument(
         '-o', '--output',
+        default='-',
         dest='output_file',
         metavar='FILE',
-        default='-',
         type=argparse.FileType('w'),
         help='Where to save mapping'
     )
