@@ -34,15 +34,8 @@ def _parse_options():
     return parser.parse_args()
 
 
-def ifiles_in_directory(directory_name):
-    for file_name in os.listdir(directory_name):
-        abs_file_name = os.path.abspath(os.path.join(directory_name, file_name))
-        if os.path.isfile(abs_file_name):
-            yield abs_file_name
-
-
 def process_input(directory_name, output_file):
-    for abs_file_name in ifiles_in_directory(directory_name):
+    for abs_file_name in common.ifiles_in_directory(directory_name):
         file_name = os.path.basename(abs_file_name)
         file_size = os.path.getsize(abs_file_name)
         output_file.write('{}\t{}\n'.format(file_name, file_size))

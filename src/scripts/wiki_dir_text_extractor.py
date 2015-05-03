@@ -36,16 +36,9 @@ def extract_text_wrapper(tuple_):
     extract_text(*tuple_)
 
 
-def ifiles_in_directory(directory_name):
-    for file_name in os.listdir(directory_name):
-        abs_file_name = os.path.abspath(os.path.join(directory_name, file_name))
-        if os.path.isfile(abs_file_name):
-            yield abs_file_name
-
-
 def process_input(input_dir_name, output_dir_name, clean_text, jobs_count):
     logging.info('processing_input')
-    in_files = [x for x in ifiles_in_directory(input_dir_name)]
+    in_files = [x for x in common.ifiles_in_directory(input_dir_name)]
     out_files = [os.path.join(output_dir_name, os.path.basename(x)) for x in in_files]
     pool = multiprocessing.Pool(jobs_count)
     jobs = pool.imap_unordered(extract_text_wrapper, izip(in_files, out_files, repeat(clean_text)))
