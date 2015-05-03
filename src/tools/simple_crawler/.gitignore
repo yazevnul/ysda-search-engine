@@ -2,6 +2,7 @@ simple_crawler
 simple_crawler_state/*
 docs/*
 docs_data/*
+docs_text/*
 new.stderr.txt
 restore.stderr.txt
 my_config.json
